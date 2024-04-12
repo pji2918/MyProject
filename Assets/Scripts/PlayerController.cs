@@ -202,16 +202,73 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.interactText.text = "이 문은 잠겨 있습니다.\n" +
                         "열려면 " + hit.collider.GetComponent<Door>().key.Description[..15] + hit.collider.GetComponent<Door>().key.ItemName + "</color>" + "가 필요합니다.";
                     }
+                    else
+                    {
+                        UIManager.instance.interactText.gameObject.SetActive(true);
+                        UIManager.instance.interactText.text = "F를 길게 눌러 문 잠금 해제";
+
+                        if (Input.GetKey(KeyCode.F) && rb.velocity == Vector3.zero)
+                        {
+                            isDoorOpening = true;
+                            UIManager.instance.interactText.gameObject.SetActive(false);
+                            UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "문 잠금 해제 중...";
+                            UIManager.instance.progressBarContainer.SetActive(true);
+                            currentActionTime += Time.deltaTime;
+                            UIManager.instance.progressBar.fillAmount = currentActionTime / hit.collider.GetComponent<Door>().unlockTime;
+
+                            if (currentActionTime >= hit.collider.GetComponent<Door>().unlockTime * 0.8 && hit.collider.GetComponent<Door>().key != holdingItem)
+                            {
+                                UIManager.instance.progressBarContainer.SetActive(false);
+
+                                UIManager.instance.interactText.gameObject.SetActive(true);
+                                UIManager.instance.interactText.text = "열쇠가 맞지 않습니다.";
+
+                                isDoorOpening = false;
+                            }
+                            else if (currentActionTime >= hit.collider.GetComponent<Door>().unlockTime)
+                            {
+                                UIManager.instance.progressBarContainer.SetActive(false);
+                                score += 100;
+                                isDoorOpening = false;
+                                hit.collider.GetComponent<Door>().isLocked = false;
+
+                                inventory.Remove(holdingItem);
+                                holdingItem = null;
+                            }
+                        }
+                        else
+                        {
+                            isDoorOpening = false;
+
+                            if (!isEquipping && !isInvOpening)
+                            {
+                                currentActionTime = 0f;
+                                UIManager.instance.progressBarContainer.SetActive(false);
+                            }
+                        }
+                    }
                 }
             }
             else
             {
                 isDoorOpening = false;
+
+                if (!isEquipping && !isInvOpening)
+                {
+                    currentActionTime = 0f;
+                    UIManager.instance.progressBarContainer.SetActive(false);
+                }
             }
         }
         else
         {
             isDoorOpening = false;
+
+            if (!isEquipping && !isInvOpening)
+            {
+                currentActionTime = 0f;
+                UIManager.instance.progressBarContainer.SetActive(false);
+            }
         }
 
         if (transform.position.y < -10)
@@ -247,21 +304,10 @@ public class PlayerController : MonoBehaviour
             UIManager.instance.ItemUI.SetActive(true);
             UIManager.instance.ItemUI.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = holdingItem.Icon;
             UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", holdingItem.Amount, inventory[inventory.IndexOf(holdingItem)].Amount);
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (holdingItem.Amount > 0)
-                {
-                    holdingItem.Amount -= 1;
-                    if (holdingItem.Amount == 0)
-                    {
-                        inventory.Remove(holdingItem);
-                        holdingItem = null;
-
-                        UIManager.instance.ItemUI.SetActive(false);
-                    }
-                }
-            }
+        }
+        else
+        {
+            UIManager.instance.ItemUI.SetActive(false);
         }
     }
 
@@ -304,7 +350,6 @@ public class PlayerController : MonoBehaviour
 
     public void UnDetect()
     {
-        score += 1;
         Enemy[] enemy = FindObjectsOfType<Enemy>();
         UIManager.instance.detectedWarning.SetActive(false);
         foreach (Enemy e in enemy)
