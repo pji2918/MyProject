@@ -57,5 +57,5 @@
         "Temp/": true,
         "**/*.shadergraph": true
     },
-    "dotnet.defaultSolution": "My project.sln"
+    "dotnet.defaultSolution": "MyProject.sln"
 }

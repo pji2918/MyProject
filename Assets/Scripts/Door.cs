@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    public bool isOpen = false, isLocked = false;
+    [HideInInspector] public bool isOpen = false;
+    public bool isLocked = false;
     private Vector3 originPos, newPos;
-
+    public float unlockTime = 5f;
+    public Item key;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +19,7 @@ public class Door : MonoBehaviour
 
     private float time = 0f;
 
-    public bool isOpening = false;
+    [HideInInspector] public bool isOpening = false;
 
     // Update is called once per frame
     void Update()

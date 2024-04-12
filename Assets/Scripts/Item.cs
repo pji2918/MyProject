@@ -33,6 +33,28 @@ public class Item : ScriptableObject, IComparable<Item>
         }
     }
 
+    [SerializeField] private float equipTime;
+    public float EquipTime
+    {
+        get
+        {
+            return equipTime;
+        }
+    }
+
+    [SerializeField] private uint amount;
+    public uint Amount
+    {
+        get
+        {
+            return amount;
+        }
+        set
+        {
+            amount = value;
+        }
+    }
+
     int IComparable<Item>.CompareTo(Item other)
     {
         return ItemName.CompareTo(other.ItemName);

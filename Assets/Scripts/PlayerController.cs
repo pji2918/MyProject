@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isDoorOpening = false, isInvOpening = false;
 
+    public Item holdingItem;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,107 +58,83 @@ public class PlayerController : MonoBehaviour
 
             playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
             transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+        }
 
-            Ray ray = new Ray(transform.position, transform.forward);
+        if (Input.GetKeyUp(KeyCode.F) || Input.GetKeyUp(KeyCode.Tab))
+        {
+            currentActionTime = 0f;
+            UIManager.instance.progressBarContainer.SetActive(false);
+        }
 
-            if (!UIManager.instance.inventoryUI.activeSelf)
+        Ray ray = new Ray(transform.position, transform.forward);
+
+        if (!UIManager.instance.inventoryUI.activeSelf)
+        {
+            if (Input.GetKey(KeyCode.Tab) && !isDoorOpening)
             {
-                if (Input.GetKey(KeyCode.Tab) && !isDoorOpening)
+                if (holdingItem != null)
                 {
-                    isInvOpening = true;
-                    UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "주머니 여는 중...";
-                    UIManager.instance.progressBarContainer.SetActive(true);
-                    currentActionTime += Time.deltaTime;
-                    UIManager.instance.progressBar.fillAmount = currentActionTime / inventoryOpenTime;
-                    if (currentActionTime >= inventoryOpenTime)
+                    if (rb.velocity == Vector3.zero)
+                    {
+                        isInvOpening = true;
+                        UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "주머니에 아이템 넣는 중...";
+                        UIManager.instance.progressBarContainer.SetActive(true);
+                        UIManager.instance.interactText.gameObject.SetActive(false);
+                        currentActionTime += Time.deltaTime;
+                        UIManager.instance.progressBar.fillAmount = currentActionTime / holdingItem.EquipTime;
+                        if (currentActionTime >= holdingItem.EquipTime)
+                        {
+                            score += 10;
+                            UIManager.instance.progressBarContainer.SetActive(false);
+                            currentActionTime = 0f;
+                            UIManager.instance.ItemUI.SetActive(false);
+                            holdingItem = null;
+                            UIManager.instance.OpenInventory();
+                        }
+                    }
+                    else
                     {
                         isInvOpening = false;
-                        UIManager.instance.progressBarContainer.SetActive(false);
-                        score += 10;
-                        UIManager.instance.OpenInventory();
+                        if (!isEquipping && !isDoorOpening)
+                        {
+                            currentActionTime = 0f;
+                            UIManager.instance.progressBarContainer.SetActive(false);
+                        }
                     }
                 }
                 else
                 {
-                    isInvOpening = false;
-                    if (!isDoorOpening)
+                    if (rb.velocity == Vector3.zero)
                     {
-                        UIManager.instance.progressBarContainer.SetActive(false);
-                        currentActionTime = 0f;
-                    }
-                }
-            }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.Tab))
-                {
-                    UIManager.instance.OpenInventory();
-                }
-            }
-
-            if (Physics.Raycast(ray, out RaycastHit hit, 1.5f))
-            {
-                if (hit.collider.CompareTag("Door") && !hit.transform.GetComponent<Door>().isOpening)
-                {
-                    if (hit.collider.GetComponent<Door>().isOpen)
-                    {
-                        UIManager.instance.interactText.text = "F를 길게 눌러 문 닫기";
-                    }
-                    else
-                    {
-                        UIManager.instance.interactText.text = "F를 길게 눌러 문 열기";
-                    }
-
-                    if (Input.GetKey(KeyCode.F) && !isInvOpening)
-                    {
-                        isDoorOpening = true;
-                        UIManager.instance.interactText.gameObject.SetActive(false);
-                        if (hit.collider.GetComponent<Door>().isOpen)
-                        {
-                            UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "문 닫는 중...";
-                        }
-                        else
-                        {
-                            UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "문 여는 중...";
-                        }
+                        isInvOpening = true;
+                        UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "주머니 여는 중...";
                         UIManager.instance.progressBarContainer.SetActive(true);
+                        UIManager.instance.interactText.gameObject.SetActive(false);
                         currentActionTime += Time.deltaTime;
-                        UIManager.instance.progressBar.fillAmount = currentActionTime / doorOpenTime;
-                        if (currentActionTime >= doorOpenTime)
+                        UIManager.instance.progressBar.fillAmount = currentActionTime / inventoryOpenTime;
+                        if (currentActionTime >= inventoryOpenTime)
                         {
-                            score += 10;
-                            isDoorOpening = false;
-                            UIManager.instance.progressBarContainer.SetActive(false);
-                            hit.collider.GetComponent<Door>().OpenTheDoor();
-                        }
-                    }
-                    else
-                    {
-                        isDoorOpening = false;
-                        if (!isInvOpening)
-                        {
-                            score += 10;
-                            UIManager.instance.interactText.gameObject.SetActive(true);
+                            isInvOpening = false;
                             UIManager.instance.progressBarContainer.SetActive(false);
                             currentActionTime = 0f;
+                            score += 10;
+                            UIManager.instance.OpenInventory();
+                        }
+                    }
+                    else
+                    {
+                        isInvOpening = false;
+                        if (!isEquipping && !isDoorOpening)
+                        {
+                            currentActionTime = 0f;
+                            UIManager.instance.progressBarContainer.SetActive(false);
                         }
                     }
                 }
             }
             else
             {
-                isDoorOpening = false;
-                if (!isInvOpening)
-                {
-                    currentActionTime = 0f;
-                    UIManager.instance.interactText.gameObject.SetActive(false);
-                    UIManager.instance.progressBarContainer.SetActive(false);
-                }
-            }
-
-            if (transform.position.y < -10)
-            {
-                Die();
+                isInvOpening = false;
             }
         }
         else
@@ -164,6 +142,125 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 UIManager.instance.OpenInventory();
+            }
+        }
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 1.5f))
+        {
+            if (hit.collider.CompareTag("Door"))
+            {
+                if (!hit.collider.gameObject.GetComponent<Door>().isLocked)
+                {
+                    if (!hit.transform.GetComponent<Door>().isOpening && !isInvOpening)
+                    {
+                        UIManager.instance.interactText.gameObject.SetActive(true);
+
+                        if (hit.collider.GetComponent<Door>().isOpen)
+                        {
+                            UIManager.instance.interactText.text = "F를 길게 눌러 문 닫기";
+                        }
+                        else
+                        {
+                            UIManager.instance.interactText.text = "F를 길게 눌러 문 열기";
+                        }
+
+                        if (Input.GetKey(KeyCode.F))
+                        {
+                            isDoorOpening = true;
+                            UIManager.instance.interactText.gameObject.SetActive(false);
+                            if (hit.collider.GetComponent<Door>().isOpen)
+                            {
+                                UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "문 닫는 중...";
+                            }
+                            else
+                            {
+                                UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "문 여는 중...";
+                            }
+                            UIManager.instance.progressBarContainer.SetActive(true);
+                            currentActionTime += Time.deltaTime;
+                            UIManager.instance.progressBar.fillAmount = currentActionTime / doorOpenTime;
+                            if (currentActionTime >= doorOpenTime)
+                            {
+                                UIManager.instance.progressBarContainer.SetActive(false);
+                                score += 10;
+                                isDoorOpening = false;
+                                hit.collider.GetComponent<Door>().OpenTheDoor();
+                            }
+                        }
+                        else
+                        {
+                            isDoorOpening = false;
+                        }
+                    }
+                }
+                else
+                {
+                    isDoorOpening = false;
+                    if (holdingItem == null)
+                    {
+                        UIManager.instance.interactText.gameObject.SetActive(true);
+                        UIManager.instance.interactText.text = "이 문은 잠겨 있습니다.\n" +
+                        "열려면 " + hit.collider.GetComponent<Door>().key.Description[..15] + hit.collider.GetComponent<Door>().key.ItemName + "</color>" + "가 필요합니다.";
+                    }
+                }
+            }
+            else
+            {
+                isDoorOpening = false;
+            }
+        }
+        else
+        {
+            isDoorOpening = false;
+        }
+
+        if (transform.position.y < -10)
+        {
+            Die();
+        }
+
+        if (isEquipping)
+        {
+            if (rb.velocity == Vector3.zero)
+            {
+                currentActionTime += Time.deltaTime;
+                UIManager.instance.progressBar.fillAmount = currentActionTime / inventory[idx].EquipTime;
+                UIManager.instance.progressBarContainer.SetActive(true);
+                UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} 장착 중...", inventory[idx].ItemName);
+
+                if (currentActionTime >= inventory[idx].EquipTime)
+                {
+                    holdingItem = inventory[idx];
+                    UIManager.instance.progressBarContainer.SetActive(false);
+                    isEquipping = false;
+                    currentActionTime = 0f;
+                }
+            }
+            else
+            {
+                isEquipping = false;
+            }
+        }
+
+        if (holdingItem != null)
+        {
+            UIManager.instance.ItemUI.SetActive(true);
+            UIManager.instance.ItemUI.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = holdingItem.Icon;
+            UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", holdingItem.Amount, inventory[inventory.IndexOf(holdingItem)].Amount);
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (holdingItem.Amount > 0)
+                {
+                    holdingItem.Amount -= 1;
+                    if (holdingItem.Amount == 0)
+                    {
+                        inventory.Remove(holdingItem);
+                        holdingItem = null;
+
+                        UIManager.instance.ItemUI.SetActive(false);
+                    }
+                }
             }
         }
     }
@@ -217,5 +314,18 @@ public class PlayerController : MonoBehaviour
                 e.state = Enemy.State.Warning;
             }
         }
+    }
+
+    private bool isEquipping = false;
+
+    private int idx = -1;
+
+    public void EquipItem(int index)
+    {
+        isInvOpening = false;
+        UIManager.instance.OpenInventory();
+        idx = index;
+        currentActionTime = 0f;
+        isEquipping = true;
     }
 }

@@ -14,7 +14,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     public TextMeshProUGUI interactText, itemName, itemDescription, scoreText;
-    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI;
+    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, ItemUI;
     public Image progressBar;
     public RectTransform mouseBox;
 
@@ -47,27 +47,37 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void RefreshInventory()
+    {
+        GameObject inventorySlot = inventoryUI.transform.GetChild(3).gameObject;
+
+        foreach (var (value, i) in player.GetComponent<PlayerController>().inventory.Select((value, i) => (value, i)))
+        {
+            if (value == null)
+            {
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().sprite = null;
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 0);
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[0].callback.RemoveAllListeners();
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[1].callback.RemoveAllListeners();
+                inventorySlot.transform.GetChild(i).GetChild(0).gameObject.SetActive(false);
+            }
+            else
+            {
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().sprite = value.Icon;
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[0].callback.AddListener((data) => CallTooltip(value));
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[1].callback.AddListener((data) => CloseTooltip());
+                inventorySlot.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
+            }
+        }
+    }
+
     public void OpenInventory()
     {
+        CloseTooltip();
         if (!inventoryUI.activeSelf)
         {
-            GameObject inventorySlot = inventoryUI.transform.GetChild(3).gameObject;
-
-            foreach (var (value, i) in player.GetComponent<PlayerController>().inventory.Select((value, i) => (value, i)))
-            {
-                if (value is null)
-                {
-                    inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().sprite = null;
-                    inventorySlot.transform.GetChild(i).GetChild(0).gameObject.SetActive(false);
-                }
-                else
-                {
-                    inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().sprite = value.Icon;
-                    inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                    inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[0].callback.AddListener((data) => CallTooltip(value));
-                    inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[1].callback.AddListener((data) => CloseTooltip());
-                }
-            }
+            RefreshInventory();
 
             inventoryUI.SetActive(true);
 
@@ -118,22 +128,13 @@ public class UIManager : MonoBehaviour
     {
         player.GetComponent<PlayerController>().inventory.Sort();
 
-        GameObject inventorySlot = inventoryUI.transform.GetChild(3).gameObject;
+        RefreshInventory();
+    }
 
-        foreach (var (value, i) in player.GetComponent<PlayerController>().inventory.Select((value, i) => (value, i)))
-        {
-            if (value is null)
-            {
-                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().sprite = null;
-                inventorySlot.transform.GetChild(i).GetChild(0).gameObject.SetActive(false);
-            }
-            else
-            {
-                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().sprite = value.Icon;
-                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 1);
-                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[0].callback.AddListener((data) => CallTooltip(value));
-                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[1].callback.AddListener((data) => CloseTooltip());
-            }
-        }
+    public void EquipItem(int index)
+    {
+        player.GetComponent<PlayerController>().EquipItem(index);
+
+
     }
 }
