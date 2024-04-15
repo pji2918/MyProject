@@ -218,19 +218,23 @@ public class PlayerController : MonoBehaviour
 
                             if (currentActionTime >= hit.collider.GetComponent<Door>().unlockTime * 0.8 && hit.collider.GetComponent<Door>().key != holdingItem)
                             {
+                                currentActionTime = 0f;
                                 UIManager.instance.progressBarContainer.SetActive(false);
 
                                 UIManager.instance.interactText.gameObject.SetActive(true);
                                 UIManager.instance.interactText.text = "열쇠가 맞지 않습니다.";
 
+
                                 isDoorOpening = false;
                             }
                             else if (currentActionTime >= hit.collider.GetComponent<Door>().unlockTime)
                             {
+                                currentActionTime = 0f;
                                 UIManager.instance.progressBarContainer.SetActive(false);
                                 score += 100;
                                 isDoorOpening = false;
                                 hit.collider.GetComponent<Door>().isLocked = false;
+
 
                                 inventory.Remove(holdingItem);
                                 holdingItem = null;
