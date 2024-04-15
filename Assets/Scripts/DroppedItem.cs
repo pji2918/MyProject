@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+using System;
+using pji2918.Functions;
 
 public class DroppedItem : MonoBehaviour
 {
@@ -10,7 +13,8 @@ public class DroppedItem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerController>().inventory.Add(item);
+            FunctionCollections.AddItem(other.GetComponent<PlayerController>().inventory, item);
+
             Destroy(gameObject);
         }
     }

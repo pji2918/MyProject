@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float doorOpenTime = 3f, inventoryOpenTime = 1f;
 
-    public List<Item> inventory = new List<Item>();
+    public Item[] inventory = new Item[6];
 
     private int score = 0;
 
@@ -235,9 +238,10 @@ public class PlayerController : MonoBehaviour
                                 isDoorOpening = false;
                                 hit.collider.GetComponent<Door>().isLocked = false;
 
-
-                                inventory.Remove(holdingItem);
+                                inventory[Array.IndexOf(inventory, holdingItem)] = null;
                                 holdingItem = null;
+
+                                UIManager.instance.RefreshInventory();
                             }
                         }
                         else
@@ -256,6 +260,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 isDoorOpening = false;
+                UIManager.instance.interactText.gameObject.SetActive(false);
 
                 if (!isEquipping && !isInvOpening)
                 {
@@ -267,6 +272,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             isDoorOpening = false;
+            UIManager.instance.interactText.gameObject.SetActive(false);
 
             if (!isEquipping && !isInvOpening)
             {
@@ -307,7 +313,7 @@ public class PlayerController : MonoBehaviour
         {
             UIManager.instance.ItemUI.SetActive(true);
             UIManager.instance.ItemUI.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = holdingItem.Icon;
-            UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", holdingItem.Amount, inventory[inventory.IndexOf(holdingItem)].Amount);
+            UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", holdingItem.Amount, inventory[Array.IndexOf(inventory, holdingItem)].Amount);
         }
         else
         {

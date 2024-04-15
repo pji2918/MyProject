@@ -59,6 +59,7 @@ public class UIManager : MonoBehaviour
                 inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 0);
                 inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[0].callback.RemoveAllListeners();
                 inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[1].callback.RemoveAllListeners();
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Button>().interactable = false;
                 inventorySlot.transform.GetChild(i).GetChild(0).gameObject.SetActive(false);
             }
             else
@@ -67,6 +68,7 @@ public class UIManager : MonoBehaviour
                 inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = new Color(1, 1, 1, 1);
                 inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[0].callback.AddListener((data) => CallTooltip(value));
                 inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<EventTrigger>().triggers[1].callback.AddListener((data) => CloseTooltip());
+                inventorySlot.transform.GetChild(i).GetChild(0).GetComponent<Button>().interactable = true;
                 inventorySlot.transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
             }
         }
@@ -74,10 +76,10 @@ public class UIManager : MonoBehaviour
 
     public void OpenInventory()
     {
+        RefreshInventory();
         CloseTooltip();
         if (!inventoryUI.activeSelf)
         {
-            RefreshInventory();
 
             inventoryUI.SetActive(true);
 
@@ -126,7 +128,9 @@ public class UIManager : MonoBehaviour
 
     public void SortInventory()
     {
-        player.GetComponent<PlayerController>().inventory.Sort();
+        Array.Sort(player.GetComponent<PlayerController>().inventory);
+
+        player.GetComponent<PlayerController>().inventory = player.GetComponent<PlayerController>().inventory.OrderBy(x => x == null).ToArray();
 
         RefreshInventory();
     }
@@ -134,7 +138,5 @@ public class UIManager : MonoBehaviour
     public void EquipItem(int index)
     {
         player.GetComponent<PlayerController>().EquipItem(index);
-
-
     }
 }

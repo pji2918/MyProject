@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   _injectionPoint: 550
-  _renderCamera: 9
+  _renderCamera: 29
   _shader: {fileID: -6465566751694194690, guid: a1b07ed697d67f145899e797afa7e6d3, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
