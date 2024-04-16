@@ -19,7 +19,7 @@ public class CCTV : MonoBehaviour
         RaycastHit hit;
 
         // if (Physics.Raycast(transform.position, transform.forward, out hit, 10f, LayerMask.GetMask("Player")))
-        if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit, 10f, LayerMask.GetMask("Player")))
+        if (Physics.SphereCast(transform.position, 1f, transform.forward, out hit, 10f, LayerMask.GetMask("Player")))
         {
             if (hit.collider.CompareTag("Player"))
             {

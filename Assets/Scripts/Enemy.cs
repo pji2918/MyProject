@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,8 +10,11 @@ public class Enemy : MonoBehaviour
         Idle,
         Found,
         RemoteFound,
-        Warning
+        Warning,
+        Sleeping
     }
+
+    private Rigidbody rb;
 
     [SerializeField] private bool drawAngles;
 
@@ -33,6 +35,8 @@ public class Enemy : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         floorDetectionRayDirection = transform.GetChild(1);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        rb = GetComponent<Rigidbody>();
     }
 
     public State state = State.Idle;
@@ -50,7 +54,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private LayerMask playerMask;
     [SerializeField] private LayerMask obstacleMask;
 
-    private float warningTime = 5f;
+    private float warningTime = 8f, sleepingTime = 5f;
+
 
     // Update is called once per frame
     void Update()
@@ -103,7 +108,10 @@ public class Enemy : MonoBehaviour
                         state = State.Found;
                     }
 
-                    agent.SetDestination(transform.position + transform.forward * 2);
+                    if (agent.enabled)
+                    {
+                        agent.SetDestination(transform.position + transform.forward * 2);
+                    }
 
                     if (!Physics.Raycast(groundRay, 1.5f, LayerMask.GetMask("Ground")))
                     {
@@ -118,20 +126,26 @@ public class Enemy : MonoBehaviour
                 }
             case State.Found:
                 {
-                    if (targetList.Contains(player.GetComponent<Collider>()))
+                    if (agent.enabled)
                     {
-                        targetList[0].GetComponent<PlayerController>().DetectedByEnemy(transform);
-                        agent.SetDestination(targetList[0].transform.position);
-                    }
-                    else
-                    {
-                        state = State.Idle;
+                        if (targetList.Contains(player.GetComponent<Collider>()))
+                        {
+                            targetList[0].GetComponent<PlayerController>().DetectedByEnemy(transform);
+                            agent.SetDestination(targetList[0].transform.position);
+                        }
+                        else
+                        {
+                            state = State.Idle;
+                        }
                     }
                     break;
                 }
             case State.RemoteFound:
                 {
-                    agent.SetDestination(player.position);
+                    if (agent.enabled)
+                    {
+                        agent.SetDestination(player.position);
+                    }
 
                     if (Vector3.Distance(transform.position, player.position) > 10)
                     {
@@ -159,6 +173,29 @@ public class Enemy : MonoBehaviour
                     }
                     break;
                 }
+            case State.Sleeping:
+                {
+                    if (sleepingTime > 0)
+                    {
+                        rb.constraints = RigidbodyConstraints.None;
+                        agent.enabled = false;
+                        sleepingTime -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        agent.enabled = true;
+                        rb.constraints = RigidbodyConstraints.FreezeAll;
+
+                        transform.position = new Vector3(transform.position.x, 11, transform.position.z);
+
+                        transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+
+                        state = State.Warning;
+                        sleepingTime = 5f;
+                    }
+
+                    break;
+                }
         }
     }
 
@@ -173,9 +210,20 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && state != State.Sleeping)
         {
             other.transform.GetComponent<PlayerController>().Die();
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("SLP-300"))
+        {
+            state = State.Sleeping;
+            Destroy(other.gameObject);
+
+            rb.AddForce(-transform.forward * 10, ForceMode.Impulse);
         }
     }
 }

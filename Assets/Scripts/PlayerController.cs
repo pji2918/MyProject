@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,24 +16,43 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float doorOpenTime = 3f, inventoryOpenTime = 1f;
 
-    public Item[] inventory = new Item[6];
+    [HideInInspector] public Item[] inventory = new Item[6];
+    public Item[] defaultItems = new Item[6];
 
     private int score = 0;
 
     private float currentActionTime = 0f;
 
-    private bool isDoorOpening = false, isInvOpening = false;
+    private bool isDoorOpening = false, isInvOpening = false, isReloading = false, isGetting = false;
 
     public Item holdingItem;
+
+    [SerializeField] private GameObject slp300;
+
+    [SerializeField] private Item slp300Item, gunItem;
 
     // Start is called before the first frame update
     void Start()
     {
+        SceneManager.activeSceneChanged += ChangedActiveScene;
+
         rb = GetComponent<Rigidbody>();
         playerCamera = GetComponentInChildren<Camera>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void ChangedActiveScene(Scene current, Scene next)
+    {
+        (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount = (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCapacity;
+
+        (inventory[Array.IndexOf(inventory, gunItem)] as Gun).Ammo = 0;
+    }
+
+    void OnEnable()
+    {
+        inventory = defaultItems;
     }
 
     private float xRotation;
@@ -63,13 +82,13 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
         }
 
-        if (Input.GetKeyUp(KeyCode.F) || Input.GetKeyUp(KeyCode.Tab))
+        if (Input.GetKeyUp(KeyCode.F) || Input.GetKeyUp(KeyCode.Tab) || Input.GetKeyUp(KeyCode.R))
         {
             currentActionTime = 0f;
             UIManager.instance.progressBarContainer.SetActive(false);
         }
 
-        Ray ray = new Ray(transform.position, transform.forward);
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
         if (!UIManager.instance.inventoryUI.activeSelf)
         {
@@ -98,7 +117,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         isInvOpening = false;
-                        if (!isEquipping && !isDoorOpening)
+                        if (!isEquipping && !isDoorOpening && !isReloading && !isGetting)
                         {
                             currentActionTime = 0f;
                             UIManager.instance.progressBarContainer.SetActive(false);
@@ -127,7 +146,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         isInvOpening = false;
-                        if (!isEquipping && !isDoorOpening)
+                        if (!isEquipping && !isDoorOpening && !isReloading && !isGetting)
                         {
                             currentActionTime = 0f;
                             UIManager.instance.progressBarContainer.SetActive(false);
@@ -205,7 +224,7 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.interactText.text = "이 문은 잠겨 있습니다.\n" +
                         "열려면 " + hit.collider.GetComponent<Door>().key.Description[..15] + hit.collider.GetComponent<Door>().key.ItemName + "</color>" + "가 필요합니다.";
                     }
-                    else
+                    else if (holdingItem is not Gun)
                     {
                         UIManager.instance.interactText.gameObject.SetActive(true);
                         UIManager.instance.interactText.text = "F를 길게 눌러 문 잠금 해제";
@@ -225,8 +244,8 @@ public class PlayerController : MonoBehaviour
                                 UIManager.instance.progressBarContainer.SetActive(false);
 
                                 UIManager.instance.interactText.gameObject.SetActive(true);
-                                UIManager.instance.interactText.text = "열쇠가 맞지 않습니다.";
 
+                                UIManager.instance.ShowWarning("열쇠가 맞지 않습니다!");
 
                                 isDoorOpening = false;
                             }
@@ -248,7 +267,7 @@ public class PlayerController : MonoBehaviour
                         {
                             isDoorOpening = false;
 
-                            if (!isEquipping && !isInvOpening)
+                            if (!isEquipping && !isInvOpening && !isReloading && !isGetting)
                             {
                                 currentActionTime = 0f;
                                 UIManager.instance.progressBarContainer.SetActive(false);
@@ -257,12 +276,50 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+            else if (hit.collider.CompareTag("Item"))
+            {
+                if (!isInvOpening && !isDoorOpening)
+                {
+                    UIManager.instance.interactText.gameObject.SetActive(true);
+
+                    UIManager.instance.interactText.text = "F를 길게 눌러 아이템 줍기";
+
+                    if (holdingItem != null && Input.GetKeyDown(KeyCode.F))
+                    {
+                        UIManager.instance.ShowWarning("아이템을 주으려면 먼저 들고 있는 아이템을 주머니에 넣어야 합니다!");
+                    }
+                    else if (holdingItem == null && Input.GetKey(KeyCode.F))
+                    {
+                        isGetting = true;
+                        UIManager.instance.interactText.gameObject.SetActive(false);
+
+                        UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "아이템 줍는 중...";
+
+                        UIManager.instance.progressBarContainer.SetActive(true);
+                        currentActionTime += Time.deltaTime;
+                        UIManager.instance.progressBar.fillAmount = currentActionTime / 1f;
+                        if (currentActionTime >= 1f)
+                        {
+                            UIManager.instance.progressBarContainer.SetActive(false);
+                            score += 10;
+                            isGetting = false;
+
+                            hit.collider.GetComponent<DroppedItem>().ToPlayerInventory();
+                        }
+                    }
+                    else
+                    {
+                        isGetting = false;
+                    }
+                }
+            }
             else
             {
                 isDoorOpening = false;
+                isGetting = false;
                 UIManager.instance.interactText.gameObject.SetActive(false);
 
-                if (!isEquipping && !isInvOpening)
+                if (!isEquipping && !isInvOpening && !isReloading && !isGetting && !isDoorOpening)
                 {
                     currentActionTime = 0f;
                     UIManager.instance.progressBarContainer.SetActive(false);
@@ -272,9 +329,93 @@ public class PlayerController : MonoBehaviour
         else
         {
             isDoorOpening = false;
+            isGetting = false;
             UIManager.instance.interactText.gameObject.SetActive(false);
 
-            if (!isEquipping && !isInvOpening)
+            if (!isEquipping && !isInvOpening && !isReloading && !isGetting && !isDoorOpening)
+            {
+                currentActionTime = 0f;
+                UIManager.instance.progressBarContainer.SetActive(false);
+            }
+        }
+
+        if (holdingItem is Gun)
+        {
+            UIManager.instance.gunUsage.gameObject.SetActive(true);
+
+            if (controllable)
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if ((holdingItem as Gun).Ammo > 0)
+                    {
+                        (holdingItem as Gun).Ammo--;
+
+                        GameObject bullet = Instantiate(slp300, transform.position, Quaternion.identity);
+
+                        bullet.transform.rotation = playerCamera.transform.rotation;
+
+                        score += 3;
+                    }
+                }
+                else if
+                (
+                    Input.GetKey(KeyCode.R) && !isDoorOpening && !isInvOpening
+                    && (holdingItem as Gun).Ammo < (holdingItem as Gun).MaxAmmo && inventory.Contains(slp300Item)
+                    && (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount > 0
+                )
+                {
+                    if (rb.velocity == Vector3.zero)
+                    {
+                        isReloading = true;
+                        UIManager.instance.interactText.gameObject.SetActive(false);
+                        UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "재장전 중...";
+                        UIManager.instance.progressBarContainer.SetActive(true);
+                        currentActionTime += Time.deltaTime;
+                        UIManager.instance.progressBar.fillAmount = currentActionTime / (holdingItem as Gun).ReloadTime;
+
+                        if (currentActionTime >= (holdingItem as Gun).ReloadTime)
+                        {
+                            (holdingItem as Gun).Ammo = (holdingItem as Gun).MaxAmmo;
+                            isReloading = false;
+                            currentActionTime = 0f;
+                            UIManager.instance.progressBarContainer.SetActive(false);
+
+                            (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount -= 1;
+                        }
+                    }
+                    else
+                    {
+                        isReloading = false;
+
+                        if (!isEquipping && !isDoorOpening && !isInvOpening && !isGetting)
+                        {
+                            currentActionTime = 0f;
+                            UIManager.instance.progressBarContainer.SetActive(false);
+                        }
+                    }
+                }
+                else
+                {
+                    isReloading = false;
+
+                    if (!isEquipping && !isDoorOpening && !isInvOpening && !isGetting)
+                    {
+                        currentActionTime = 0f;
+                        UIManager.instance.progressBarContainer.SetActive(false);
+                    }
+                }
+            }
+        }
+        else
+        {
+            UIManager.instance.gunUsage.gameObject.SetActive(false);
+
+            StopAllCoroutines();
+
+            isReloading = false;
+
+            if (!isEquipping && !isDoorOpening && !isInvOpening && !isReloading && !isGetting)
             {
                 currentActionTime = 0f;
                 UIManager.instance.progressBarContainer.SetActive(false);
@@ -313,7 +454,16 @@ public class PlayerController : MonoBehaviour
         {
             UIManager.instance.ItemUI.SetActive(true);
             UIManager.instance.ItemUI.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = holdingItem.Icon;
-            UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", holdingItem.Amount, inventory[Array.IndexOf(inventory, holdingItem)].Amount);
+
+            if (holdingItem is Gun)
+            {
+                UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", (holdingItem as Gun).Ammo, (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount);
+            }
+            else
+            {
+                UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", 1, 1);
+            }
+
         }
         else
         {

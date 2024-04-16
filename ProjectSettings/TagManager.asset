@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Door
   - Item
+  - SLP-300
   layers:
   - Default
   - TransparentFX

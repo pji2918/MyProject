@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Value: 0
   density:
     m_OverrideState: 1
-    m_Value: 0.35
+    m_Value: 0.3
   noiseMode:
     m_OverrideState: 0
     m_Value: 0

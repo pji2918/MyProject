@@ -7,13 +7,12 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.Linq;
 using System;
-using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public TextMeshProUGUI interactText, itemName, itemDescription, scoreText;
+    public TextMeshProUGUI interactText, itemName, itemDescription, scoreText, gunUsage, warningText;
     public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, ItemUI;
     public Image progressBar;
     public RectTransform mouseBox;
@@ -137,6 +136,27 @@ public class UIManager : MonoBehaviour
 
     public void EquipItem(int index)
     {
-        player.GetComponent<PlayerController>().EquipItem(index);
+        if (player.GetComponent<PlayerController>().inventory[index].EquipTime != -1)
+        {
+            player.GetComponent<PlayerController>().EquipItem(index);
+        }
+    }
+
+    public void ShowWarning(string text)
+    {
+        StopAllCoroutines();
+
+        StartCoroutine(WarnTextCoroutine(text));
+    }
+
+    private IEnumerator WarnTextCoroutine(string text)
+    {
+        warningText.text = text;
+
+        warningText.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(2);
+
+        warningText.gameObject.SetActive(true);
     }
 }
