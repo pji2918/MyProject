@@ -17,8 +17,7 @@ MonoBehaviour:
     \uBC1C\uC0AC\uAE30\uC785\uB2C8\uB2E4!<br>\uCE74\uD2B8\uB9AC\uC9C0\uB97C \uC7A5\uCC29\uD558\uACE0,
     \uC67C\uCABD \uD074\uB9AD\uC744 \uB20C\uB7EC \uBC1C\uC0AC\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
   icon: {fileID: 21300000, guid: de5a4d112765a674d93ee00820de4b01, type: 3}
-  equipTime: 5
+  equipTime: 3.5
   amount: 1
-  ammo: 0
-  maxAmmo: 1
-  reloadTime: 5
+  maxAmmo: 3
+  reloadTime: 6

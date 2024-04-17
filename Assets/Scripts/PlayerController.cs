@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Item slp300Item, gunItem;
 
+    [SerializeField] private float gunChargeTime = 3f;
+    private float currentGunChargeTime = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,15 +66,8 @@ public class PlayerController : MonoBehaviour
     {
         if (controllable)
         {
-            float x = Input.GetAxis("Horizontal");
-            float z = Input.GetAxis("Vertical");
-
-            Vector3 move = moveSpeed * x * transform.right + moveSpeed * z * transform.forward;
-
-            rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
-
-            float mouseX = Input.GetAxis("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
+            float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
 
             yRotation += mouseX;
             xRotation -= mouseY;
@@ -94,7 +90,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Tab) && !isDoorOpening)
             {
-                if (holdingItem != null)
+                if (holdingItem != null && controllable)
                 {
                     if (rb.velocity == Vector3.zero)
                     {
@@ -104,6 +100,8 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.interactText.gameObject.SetActive(false);
                         currentActionTime += Time.deltaTime;
                         UIManager.instance.progressBar.fillAmount = currentActionTime / holdingItem.EquipTime;
+                        UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", holdingItem.EquipTime - currentActionTime);
+
                         if (currentActionTime >= holdingItem.EquipTime)
                         {
                             score += 10;
@@ -124,7 +122,7 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                 }
-                else
+                else if (controllable)
                 {
                     if (rb.velocity == Vector3.zero)
                     {
@@ -134,6 +132,8 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.interactText.gameObject.SetActive(false);
                         currentActionTime += Time.deltaTime;
                         UIManager.instance.progressBar.fillAmount = currentActionTime / inventoryOpenTime;
+                        UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", inventoryOpenTime - currentActionTime);
+
                         if (currentActionTime >= inventoryOpenTime)
                         {
                             isInvOpening = false;
@@ -201,6 +201,8 @@ public class PlayerController : MonoBehaviour
                             UIManager.instance.progressBarContainer.SetActive(true);
                             currentActionTime += Time.deltaTime;
                             UIManager.instance.progressBar.fillAmount = currentActionTime / doorOpenTime;
+                            UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", doorOpenTime - currentActionTime);
+
                             if (currentActionTime >= doorOpenTime)
                             {
                                 UIManager.instance.progressBarContainer.SetActive(false);
@@ -218,7 +220,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     isDoorOpening = false;
-                    if (holdingItem == null)
+                    if (holdingItem == null || holdingItem is Gun)
                     {
                         UIManager.instance.interactText.gameObject.SetActive(true);
                         UIManager.instance.interactText.text = "이 문은 잠겨 있습니다.\n" +
@@ -237,6 +239,8 @@ public class PlayerController : MonoBehaviour
                             UIManager.instance.progressBarContainer.SetActive(true);
                             currentActionTime += Time.deltaTime;
                             UIManager.instance.progressBar.fillAmount = currentActionTime / hit.collider.GetComponent<Door>().unlockTime;
+                            UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", hit.collider.GetComponent<Door>().unlockTime - currentActionTime);
+
 
                             if (currentActionTime >= hit.collider.GetComponent<Door>().unlockTime * 0.8 && hit.collider.GetComponent<Door>().key != holdingItem)
                             {
@@ -298,6 +302,8 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.progressBarContainer.SetActive(true);
                         currentActionTime += Time.deltaTime;
                         UIManager.instance.progressBar.fillAmount = currentActionTime / 1f;
+                        UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", 1f - currentActionTime);
+
                         if (currentActionTime >= 1f)
                         {
                             UIManager.instance.progressBarContainer.SetActive(false);
@@ -345,15 +351,46 @@ public class PlayerController : MonoBehaviour
 
             if (controllable)
             {
+                if (inventory[Array.IndexOf(inventory, slp300Item)] != null)
+                {
+                    if ((inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount < 3)
+                    {
+                        UIManager.instance.gunChargeUIContainer.SetActive(true);
+
+                        currentGunChargeTime += Time.deltaTime;
+
+                        UIManager.instance.gunChargeText.text = string.Format("{0:0.0}", gunChargeTime - currentGunChargeTime);
+
+                        if (currentGunChargeTime >= gunChargeTime)
+                        {
+                            (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount += 1;
+                            currentGunChargeTime = 0f;
+                        }
+                    }
+                    else
+                    {
+                        UIManager.instance.gunChargeUIContainer.SetActive(false);
+                    }
+                }
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     if ((holdingItem as Gun).Ammo > 0)
                     {
+                        Collider[] enemy = Physics.OverlapSphere(transform.position, 5f, LayerMask.GetMask("Enemy"));
+
+                        foreach (var e in enemy)
+                        {
+                            e.GetComponent<Enemy>().state = Enemy.State.Warning;
+                        }
+
                         (holdingItem as Gun).Ammo--;
 
-                        GameObject bullet = Instantiate(slp300, transform.position, Quaternion.identity);
+                        GameObject bullet = Instantiate(slp300, transform.position + (transform.forward * 1.5f), Quaternion.identity);
 
                         bullet.transform.rotation = playerCamera.transform.rotation;
+
+                        xRotation += UnityEngine.Random.Range(-15f, -45f);
 
                         score += 3;
                     }
@@ -361,7 +398,7 @@ public class PlayerController : MonoBehaviour
                 else if
                 (
                     Input.GetKey(KeyCode.R) && !isDoorOpening && !isInvOpening
-                    && (holdingItem as Gun).Ammo < (holdingItem as Gun).MaxAmmo && inventory.Contains(slp300Item)
+                    && (holdingItem as Gun).Ammo <= 0 && inventory.Contains(slp300Item)
                     && (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount > 0
                 )
                 {
@@ -373,15 +410,16 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.progressBarContainer.SetActive(true);
                         currentActionTime += Time.deltaTime;
                         UIManager.instance.progressBar.fillAmount = currentActionTime / (holdingItem as Gun).ReloadTime;
+                        UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", (holdingItem as Gun).ReloadTime - currentActionTime);
 
                         if (currentActionTime >= (holdingItem as Gun).ReloadTime)
                         {
-                            (holdingItem as Gun).Ammo = (holdingItem as Gun).MaxAmmo;
+                            (holdingItem as Gun).Ammo += Convert.ToInt32((inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount);
                             isReloading = false;
                             currentActionTime = 0f;
                             UIManager.instance.progressBarContainer.SetActive(false);
 
-                            (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount -= 1;
+                            (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount = 0;
                         }
                     }
                     else
@@ -410,6 +448,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             UIManager.instance.gunUsage.gameObject.SetActive(false);
+            UIManager.instance.gunChargeUIContainer.SetActive(false);
 
             StopAllCoroutines();
 
@@ -435,6 +474,7 @@ public class PlayerController : MonoBehaviour
                 UIManager.instance.progressBar.fillAmount = currentActionTime / inventory[idx].EquipTime;
                 UIManager.instance.progressBarContainer.SetActive(true);
                 UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} 장착 중...", inventory[idx].ItemName);
+                UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", inventory[idx].EquipTime - currentActionTime);
 
                 if (currentActionTime >= inventory[idx].EquipTime)
                 {
@@ -455,6 +495,8 @@ public class PlayerController : MonoBehaviour
             UIManager.instance.ItemUI.SetActive(true);
             UIManager.instance.ItemUI.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().sprite = holdingItem.Icon;
 
+            UIManager.instance.itemNameText.text = holdingItem.ItemName;
+
             if (holdingItem is Gun)
             {
                 UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", (holdingItem as Gun).Ammo, (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount);
@@ -469,7 +511,46 @@ public class PlayerController : MonoBehaviour
         {
             UIManager.instance.ItemUI.SetActive(false);
         }
+
+        if (sleepTimer > 0)
+        {
+            sleepTimer -= Time.deltaTime;
+        }
+        else if (goodNight)
+        {
+            sleepTimer = 0;
+            goodNight = false;
+
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+            rb.velocity = Vector3.zero;
+            transform.SetPositionAndRotation(new Vector3(transform.position.x, 11, transform.position.z), Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0));
+            UIManager.instance.crosshair.SetActive(true);
+
+            controllable = true;
+        }
+        else
+        {
+            sleepTimer = 0;
+        }
     }
+
+    private float sleepTimer = 0f;
+
+    void FixedUpdate()
+    {
+        if (controllable)
+        {
+            float x = Input.GetAxis("Horizontal");
+            float y = Input.GetAxis("Vertical");
+
+            Vector3 move = ((x * transform.right) + (y * transform.forward)) * moveSpeed;
+
+            rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+        }
+    }
+
+    private bool goodNight = false;
 
     public void Die()
     {
@@ -532,5 +613,36 @@ public class PlayerController : MonoBehaviour
         idx = index;
         currentActionTime = 0f;
         isEquipping = true;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("SLP-300"))
+        {
+            UIManager.instance.crosshair.SetActive(false);
+            controllable = false;
+            goodNight = true;
+
+            holdingItem = null;
+
+            Destroy(other.gameObject);
+
+            rb.constraints = RigidbodyConstraints.None;
+
+            rb.AddForce(-transform.forward * 3, ForceMode.Impulse);
+
+
+            Door[] doors = FindObjectsOfType<Door>();
+
+            foreach (var d in doors)
+            {
+                if (!d.isLocked && !d.isOpen)
+                {
+                    d.OpenTheDoor();
+                }
+            }
+
+            sleepTimer = 30f;
+        }
     }
 }

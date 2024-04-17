@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,10 +34,10 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = gameObject.GetComponent<NavMeshAgent>();
         floorDetectionRayDirection = transform.GetChild(1);
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        rb = GetComponent<Rigidbody>();
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     public State state = State.Idle;
@@ -81,6 +82,20 @@ public class Enemy : MonoBehaviour
         targetList.Clear();
         Collider[] targets = Physics.OverlapSphere(pos, viewRadius, playerMask);
 
+        if (transform.position.y < -10)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+
+            rb.velocity = Vector3.zero;
+
+            state = State.Warning;
+            transform.SetPositionAndRotation(player.position - (player.forward * 2f), Quaternion.Euler(0, 0, 0));
+
+            transform.LookAt(player);
+
+            agent.enabled = true;
+        }
+
         if (targets.Length != 0)
         {
             foreach (Collider col in targets)
@@ -108,7 +123,7 @@ public class Enemy : MonoBehaviour
                         state = State.Found;
                     }
 
-                    if (agent.enabled)
+                    if (agent.enabled && agent.isOnNavMesh)
                     {
                         agent.SetDestination(transform.position + transform.forward * 2);
                     }
@@ -126,7 +141,7 @@ public class Enemy : MonoBehaviour
                 }
             case State.Found:
                 {
-                    if (agent.enabled)
+                    if (agent.enabled && agent.isOnNavMesh)
                     {
                         if (targetList.Contains(player.GetComponent<Collider>()))
                         {
@@ -142,9 +157,17 @@ public class Enemy : MonoBehaviour
                 }
             case State.RemoteFound:
                 {
-                    if (agent.enabled)
+                    if (agent.enabled && agent.isOnNavMesh)
                     {
                         agent.SetDestination(player.position);
+                    }
+
+                    if (Physics.Raycast(groundRay, out RaycastHit hit, 1.5f, LayerMask.GetMask("Wall")))
+                    {
+                        if (hit.collider.CompareTag("Door") && !hit.collider.GetComponent<Door>().isOpen && !hit.collider.GetComponent<Door>().isLocked)
+                        {
+                            hit.collider.GetComponent<Door>().OpenTheDoor();
+                        }
                     }
 
                     if (Vector3.Distance(transform.position, player.position) > 10)
@@ -156,8 +179,18 @@ public class Enemy : MonoBehaviour
             case State.Warning:
                 {
                     viewAngle = 360;
-                    viewRadius = 10;
+                    viewRadius = 20;
 
+                    agent.enabled = true;
+
+                    rb.constraints = RigidbodyConstraints.FreezeAll;
+
+                    rb.velocity = Vector3.zero;
+
+                    if (transform.rotation.eulerAngles.x != 0)
+                    {
+                        transform.SetPositionAndRotation(new Vector3(transform.position.x, 11, transform.position.z), Quaternion.Euler(0, Random.Range(0, 360), 0));
+                    }
                     if (warningTime > 0)
                     {
                         warningTime -= Time.deltaTime;
@@ -170,6 +203,27 @@ public class Enemy : MonoBehaviour
                         viewRadius = 5;
 
                         warningTime = 5f;
+                    }
+
+
+                    if (agent.enabled && agent.isOnNavMesh)
+                    {
+                        agent.SetDestination(transform.position + transform.forward * 2);
+                    }
+
+
+                    if (!Physics.Raycast(groundRay, 1.5f, LayerMask.GetMask("Ground")))
+                    {
+                        transform.Rotate(0, Random.Range(-180, 180), 0);
+                    }
+                    else if (Physics.Raycast(groundRay, 1.5f, LayerMask.GetMask("Wall")))
+                    {
+                        transform.Rotate(0, Random.Range(-180, 180), 0);
+                    }
+
+                    if (targetList.Contains(player.GetComponent<Collider>()))
+                    {
+                        state = State.Found;
                     }
                     break;
                 }
@@ -186,10 +240,9 @@ public class Enemy : MonoBehaviour
                         agent.enabled = true;
                         rb.constraints = RigidbodyConstraints.FreezeAll;
 
-                        transform.position = new Vector3(transform.position.x, 11, transform.position.z);
+                        rb.velocity = Vector3.zero;
 
-                        transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
-
+                        transform.SetPositionAndRotation(new Vector3(transform.position.x, 11, transform.position.z), Quaternion.Euler(0, Random.Range(0, 360), 0));
                         state = State.Warning;
                         sleepingTime = 5f;
                     }
@@ -218,12 +271,12 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("SLP-300"))
+        if (other.gameObject.CompareTag("SLP-300") && state != State.Sleeping)
         {
             state = State.Sleeping;
             Destroy(other.gameObject);
 
-            rb.AddForce(-transform.forward * 10, ForceMode.Impulse);
+            rb.AddForce(-transform.forward * 3, ForceMode.Impulse);
         }
     }
 }

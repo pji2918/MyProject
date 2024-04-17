@@ -12,8 +12,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public TextMeshProUGUI interactText, itemName, itemDescription, scoreText, gunUsage, warningText;
-    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, ItemUI;
+    public TextMeshProUGUI interactText, itemName, itemDescription, scoreText, gunUsage, warningText, itemNameText, gunChargeText;
+    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, ItemUI, gunChargeUIContainer, crosshair;
     public Image progressBar;
     public RectTransform mouseBox;
 
