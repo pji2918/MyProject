@@ -631,17 +631,6 @@ public class PlayerController : MonoBehaviour
 
             rb.AddForce(-transform.forward * 3, ForceMode.Impulse);
 
-
-            Door[] doors = FindObjectsOfType<Door>();
-
-            foreach (var d in doors)
-            {
-                if (!d.isLocked && !d.isOpen)
-                {
-                    d.OpenTheDoor();
-                }
-            }
-
             sleepTimer = 30f;
         }
     }
