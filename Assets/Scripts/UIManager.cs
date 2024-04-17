@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public TextMeshProUGUI interactText, itemName, itemDescription, scoreText, gunUsage, warningText, itemNameText, gunChargeText;
+    public TextMeshProUGUI interactText, itemName, itemDescription, scoreText, gunUsage, warningText, itemNameText, gunChargeText, debugInfoText;
     public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, ItemUI, gunChargeUIContainer, crosshair;
     public Image progressBar;
     public RectTransform mouseBox;
@@ -37,6 +37,8 @@ public class UIManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
+    private bool debugScreenOn = false;
+
     // Update is called once per frame
     void Update()
     {
@@ -44,7 +46,30 @@ public class UIManager : MonoBehaviour
         {
             mouseBox.position = Input.mousePosition;
         }
+
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            debugScreenOn = !debugScreenOn;
+
+            debugInfoText.gameObject.SetActive(debugScreenOn);
+        }
+
+        if (debugScreenOn)
+        {
+            if (Application.targetFrameRate == -1)
+            {
+                frameRateCap = System.Convert.ToInt32(Screen.currentResolution.refreshRateRatio.value);
+            }
+            else
+            {
+                frameRateCap = Application.targetFrameRate;
+            }
+
+            debugInfoText.text = string.Format("FPS: {0:0} / {1}\nDisplay: {2}x{3}", 1 / Time.smoothDeltaTime, frameRateCap, Screen.width, Screen.height);
+        }
     }
+
+    private int frameRateCap;
 
     public void RefreshInventory()
     {
