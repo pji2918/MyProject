@@ -64,19 +64,21 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (controllable)
-        {
-            float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
+        // if (controllable)
+        // {
+        //     float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
+        //     float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
 
-            yRotation += mouseX;
-            xRotation -= mouseY;
+        //     yRotation += mouseX;
+        //     xRotation -= mouseY;
 
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        //     xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-            playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-            transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
-        }
+        //     playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        //     transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+        // }
+
+        GetComponent<SUPERCharacter.SUPERCharacterAIO>().enabled = controllable;
 
         if (Input.GetKeyUp(KeyCode.F) || Input.GetKeyUp(KeyCode.Tab) || Input.GetKeyUp(KeyCode.R))
         {
@@ -539,15 +541,15 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (controllable)
-        {
-            float x = Input.GetAxis("Horizontal");
-            float y = Input.GetAxis("Vertical");
+        // if (controllable)
+        // {
+        //     float x = Input.GetAxis("Horizontal");
+        //     float y = Input.GetAxis("Vertical");
 
-            Vector3 move = ((x * transform.right) + (y * transform.forward)) * moveSpeed;
+        //     Vector3 move = ((x * transform.right) + (y * transform.forward)) * moveSpeed;
 
-            rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
-        }
+        //     rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+        // }
     }
 
     private bool goodNight = false;
@@ -579,9 +581,7 @@ public class PlayerController : MonoBehaviour
 
     public void DetectedByEnemy(Transform pos)
     {
-        UIManager.instance.detectedWarning.SetActive(true);
-        UIManager.instance.detectedWarning.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "적에게 발각됨";
-        Collider[] enemycolls = Physics.OverlapSphere(pos.position, 15f, LayerMask.GetMask("Enemy"));
+        Collider[] enemycolls = Physics.OverlapSphere(pos.position, 7f, LayerMask.GetMask("Enemy"));
 
         foreach (var e in enemycolls)
         {
