@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,9 +47,9 @@ public class PlayerController : MonoBehaviour
 
     private void ChangedActiveScene(Scene current, Scene next)
     {
-        (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount = (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCapacity;
+        (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount = (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCapacity;
 
-        (inventory[Array.IndexOf(inventory, gunItem)] as Gun).Ammo = 0;
+        (inventory[System.Array.IndexOf(inventory, gunItem)] as Gun).Ammo = 0;
     }
 
     void OnEnable()
@@ -64,21 +63,19 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (controllable)
-        // {
-        //     float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
-        //     float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
+        if (controllable)
+        {
+            float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
 
-        //     yRotation += mouseX;
-        //     xRotation -= mouseY;
+            yRotation += mouseX;
+            xRotation -= mouseY;
 
-        //     xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        //     playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        //     transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
-        // }
-
-        GetComponent<SUPERCharacter.SUPERCharacterAIO>().enabled = controllable;
+            playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+            transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+        }
 
         if (Input.GetKeyUp(KeyCode.F) || Input.GetKeyUp(KeyCode.Tab) || Input.GetKeyUp(KeyCode.R))
         {
@@ -263,7 +260,7 @@ public class PlayerController : MonoBehaviour
                                 isDoorOpening = false;
                                 hit.collider.GetComponent<Door>().isLocked = false;
 
-                                inventory[Array.IndexOf(inventory, holdingItem)] = null;
+                                inventory[System.Array.IndexOf(inventory, holdingItem)] = null;
                                 holdingItem = null;
 
                                 UIManager.instance.RefreshInventory();
@@ -353,9 +350,9 @@ public class PlayerController : MonoBehaviour
 
             if (controllable)
             {
-                if (inventory[Array.IndexOf(inventory, slp300Item)] != null)
+                if (inventory[System.Array.IndexOf(inventory, slp300Item)] != null)
                 {
-                    if ((inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount < 3)
+                    if ((inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount < 3)
                     {
                         UIManager.instance.gunChargeUIContainer.SetActive(true);
 
@@ -365,7 +362,7 @@ public class PlayerController : MonoBehaviour
 
                         if (currentGunChargeTime >= gunChargeTime)
                         {
-                            (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount += 1;
+                            (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount += 1;
                             currentGunChargeTime = 0f;
                         }
                     }
@@ -392,7 +389,7 @@ public class PlayerController : MonoBehaviour
 
                         bullet.transform.rotation = playerCamera.transform.rotation;
 
-                        xRotation += UnityEngine.Random.Range(-15f, -45f);
+                        xRotation -= Random.Range(-15f, 45f);
 
                         score += 3;
                     }
@@ -401,7 +398,7 @@ public class PlayerController : MonoBehaviour
                 (
                     Input.GetKey(KeyCode.R) && !isDoorOpening && !isInvOpening
                     && (holdingItem as Gun).Ammo <= 0 && inventory.Contains(slp300Item)
-                    && (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount > 0
+                    && (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount > 0
                 )
                 {
                     if (rb.velocity == Vector3.zero)
@@ -416,12 +413,12 @@ public class PlayerController : MonoBehaviour
 
                         if (currentActionTime >= (holdingItem as Gun).ReloadTime)
                         {
-                            (holdingItem as Gun).Ammo += Convert.ToInt32((inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount);
+                            (holdingItem as Gun).Ammo += System.Convert.ToInt32((inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount);
                             isReloading = false;
                             currentActionTime = 0f;
                             UIManager.instance.progressBarContainer.SetActive(false);
 
-                            (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount = 0;
+                            (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount = 0;
                         }
                     }
                     else
@@ -501,7 +498,7 @@ public class PlayerController : MonoBehaviour
 
             if (holdingItem is Gun)
             {
-                UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", (holdingItem as Gun).Ammo, (inventory[Array.IndexOf(inventory, slp300Item)] as Container).BulletCount);
+                UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", (holdingItem as Gun).Ammo, (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount);
             }
             else
             {
@@ -541,15 +538,15 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // if (controllable)
-        // {
-        //     float x = Input.GetAxis("Horizontal");
-        //     float y = Input.GetAxis("Vertical");
+        if (controllable)
+        {
+            float x = Input.GetAxis("Horizontal");
+            float y = Input.GetAxis("Vertical");
 
-        //     Vector3 move = ((x * transform.right) + (y * transform.forward)) * moveSpeed;
+            Vector3 move = ((x * transform.right) + (y * transform.forward)) * moveSpeed;
 
-        //     rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
-        // }
+            rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+        }
     }
 
     private bool goodNight = false;
@@ -629,7 +626,7 @@ public class PlayerController : MonoBehaviour
 
             rb.constraints = RigidbodyConstraints.None;
 
-            rb.AddForce(-transform.forward * 3, ForceMode.Impulse);
+            rb.AddForce(-transform.forward * 1.5f, ForceMode.Impulse);
 
             sleepTimer = 30f;
         }
