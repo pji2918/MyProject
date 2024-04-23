@@ -45,7 +45,13 @@ public class Enemy : MonoBehaviour
         floorDetectionRayDirection = transform.GetChild(1);
         player = GameObject.FindGameObjectWithTag("Player").transform;
         rb = gameObject.GetComponent<Rigidbody>();
+
+        nowviewAngle = viewAngle;
+        nowviewRadius = viewRadius;
     }
+
+    private float nowviewAngle = 0f;
+    private float nowviewRadius = 1f;
 
     // 적의 현재 상태를 저장합니다.
     public State state = State.Idle;
@@ -84,20 +90,20 @@ public class Enemy : MonoBehaviour
 
         // 적의 시야각과 시야 거리를 설정합니다.
         float lookingAngle = transform.eulerAngles.y;
-        Vector3 rightDir = AngleToDirection(transform.eulerAngles.y + viewAngle * 0.5f);
-        Vector3 leftDir = AngleToDirection(transform.eulerAngles.y - viewAngle * 0.5f);
+        Vector3 rightDir = AngleToDirection(transform.eulerAngles.y + nowviewAngle * 0.5f);
+        Vector3 leftDir = AngleToDirection(transform.eulerAngles.y - nowviewAngle * 0.5f);
         Vector3 lookDir = AngleToDirection(lookingAngle);
 
         if (drawAngles)
         {
-            Debug.DrawRay(pos, rightDir * viewRadius, Color.blue);
-            Debug.DrawRay(pos, leftDir * viewRadius, Color.blue);
-            Debug.DrawRay(pos, lookDir * viewRadius, Color.cyan);
+            Debug.DrawRay(pos, rightDir * nowviewRadius, Color.blue);
+            Debug.DrawRay(pos, leftDir * nowviewRadius, Color.blue);
+            Debug.DrawRay(pos, lookDir * nowviewRadius, Color.cyan);
         }
 
         // 시야 내에 있는 플레이어를 감지합니다.
         targetList.Clear();
-        Collider[] targets = Physics.OverlapSphere(pos, viewRadius, playerMask);
+        Collider[] targets = Physics.OverlapSphere(pos, nowviewRadius, playerMask);
 
         // 추락 방지용.
         if (transform.position.y < -10)
@@ -122,7 +128,7 @@ public class Enemy : MonoBehaviour
                 Vector3 targetPos = col.transform.position;
                 Vector3 targetDir = (targetPos - pos).normalized;
                 float targetAngle = Mathf.Acos(Vector3.Dot(lookDir, targetDir)) * Mathf.Rad2Deg;
-                if (targetAngle <= viewAngle * 0.5f && !Physics.Raycast(pos, targetDir, viewRadius, obstacleMask))
+                if (targetAngle <= nowviewAngle * 0.5f && !Physics.Raycast(pos, targetDir, nowviewRadius, obstacleMask))
                 {
                     targetList.Add(col);
                     if (drawAngles)
@@ -201,7 +207,7 @@ public class Enemy : MonoBehaviour
                     }
 
                     // 플레이어가 일정 거리 이상 멀어지면 Warning 상태로 전환합니다.
-                    if (Vector3.Distance(transform.position, player.position) > 10)
+                    if (Vector3.Distance(transform.position, player.position) > 7)
                     {
                         state = State.Warning;
                     }
@@ -211,8 +217,8 @@ public class Enemy : MonoBehaviour
             case State.Warning:
                 {
                     // 시야각과 시야 거리가 넓어집니다.
-                    viewAngle = 360;
-                    viewRadius = 20;
+                    nowviewAngle = 360;
+                    nowviewRadius = 6;
 
                     agent.enabled = true;
 
@@ -235,8 +241,8 @@ public class Enemy : MonoBehaviour
                     {
                         state = State.Idle;
 
-                        viewAngle = 180;
-                        viewRadius = 7;
+                        nowviewAngle = viewAngle;
+                        nowviewRadius = viewRadius;
 
                         warningTime = 8f;
                     }
@@ -311,6 +317,7 @@ public class Enemy : MonoBehaviour
     {
         if (other.gameObject.CompareTag("SLP-300") && state != State.Sleeping)
         {
+            sleepingTime = 5f;
             state = State.Sleeping;
             Destroy(other.gameObject);
 
