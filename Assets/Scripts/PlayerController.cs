@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class PlayerController : MonoBehaviour
 
     public Item holdingItem;
 
+    private PlayerInput input;
+
     [SerializeField] private GameObject slp300;
 
     [SerializeField] private Item slp300Item, gunItem;
@@ -43,6 +46,8 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        input = GetComponent<PlayerInput>();
     }
 
     private void ChangedActiveScene(Scene current, Scene next)
@@ -65,8 +70,11 @@ public class PlayerController : MonoBehaviour
     {
         if (controllable)
         {
-            float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
+            // float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
+            // float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
+
+            float mouseX = input.actions["Mouse"].ReadValue<Vector2>().x * (mouseSensitivity * 50) * Time.deltaTime;
+            float mouseY = input.actions["Mouse"].ReadValue<Vector2>().y * (mouseSensitivity * 50) * Time.deltaTime;
 
             yRotation += mouseX;
             xRotation -= mouseY;
@@ -77,7 +85,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
         }
 
-        if (Input.GetKeyUp(KeyCode.F) || Input.GetKeyUp(KeyCode.Tab) || Input.GetKeyUp(KeyCode.R))
+        if (input.actions["Interact"].WasReleasedThisFrame() || input.actions["Inventory"].WasReleasedThisFrame() || input.actions["Reload"].WasReleasedThisFrame())
         {
             currentActionTime = 0f;
             UIManager.instance.progressBarContainer.SetActive(false);
@@ -87,7 +95,7 @@ public class PlayerController : MonoBehaviour
 
         if (!UIManager.instance.inventoryUI.activeSelf)
         {
-            if (Input.GetKey(KeyCode.Tab) && !isDoorOpening)
+            if (input.actions["Inventory"].IsPressed() && !isDoorOpening)
             {
                 if (holdingItem != null && controllable)
                 {
@@ -160,7 +168,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (input.actions["Inventory"].WasPressedThisFrame())
             {
                 UIManager.instance.OpenInventory();
             }
@@ -185,7 +193,7 @@ public class PlayerController : MonoBehaviour
                             UIManager.instance.interactText.text = "F를 길게 눌러 문 열기";
                         }
 
-                        if (Input.GetKey(KeyCode.F))
+                        if (input.actions["Interact"].IsPressed())
                         {
                             isDoorOpening = true;
                             UIManager.instance.interactText.gameObject.SetActive(false);
@@ -230,7 +238,7 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.interactText.gameObject.SetActive(true);
                         UIManager.instance.interactText.text = "F를 길게 눌러 문 잠금 해제";
 
-                        if (Input.GetKey(KeyCode.F) && rb.velocity == Vector3.zero)
+                        if (input.actions["Interact"].IsPressed() && rb.velocity == Vector3.zero)
                         {
                             isDoorOpening = true;
                             UIManager.instance.interactText.gameObject.SetActive(false);
@@ -287,11 +295,11 @@ public class PlayerController : MonoBehaviour
 
                     UIManager.instance.interactText.text = "F를 길게 눌러 아이템 줍기";
 
-                    if (holdingItem != null && Input.GetKeyDown(KeyCode.F))
+                    if (holdingItem != null && input.actions["Interact"].WasPressedThisFrame())
                     {
                         UIManager.instance.ShowWarning("아이템을 주으려면 먼저 들고 있는 아이템을 주머니에 넣어야 합니다!");
                     }
-                    else if (holdingItem == null && Input.GetKey(KeyCode.F))
+                    else if (holdingItem == null && input.actions["Interact"].IsPressed() && rb.velocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
                     {
                         isGetting = true;
                         UIManager.instance.interactText.gameObject.SetActive(false);
@@ -372,7 +380,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
-                if (Input.GetMouseButtonDown(0))
+                if (input.actions["Fire"].WasPressedThisFrame())
                 {
                     if ((holdingItem as Gun).Ammo > 0)
                     {
@@ -389,14 +397,14 @@ public class PlayerController : MonoBehaviour
 
                         bullet.transform.rotation = playerCamera.transform.rotation;
 
-                        xRotation -= Random.Range(-15f, 45f);
+                        xRotation -= Random.Range(15f, 45f);
 
                         score += 3;
                     }
                 }
                 else if
                 (
-                    Input.GetKey(KeyCode.R) && !isDoorOpening && !isInvOpening
+                    input.actions["Reload"].IsPressed() && !isDoorOpening && !isInvOpening
                     && (holdingItem as Gun).Ammo <= 0 && inventory.Contains(slp300Item)
                     && (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount > 0
                 )
@@ -540,10 +548,9 @@ public class PlayerController : MonoBehaviour
     {
         if (controllable)
         {
-            float x = Input.GetAxis("Horizontal");
-            float y = Input.GetAxis("Vertical");
+            Vector2 moveAxis = input.actions["PlayerMove"].ReadValue<Vector2>();
 
-            Vector3 move = ((x * transform.right) + (y * transform.forward)) * moveSpeed;
+            Vector3 move = ((moveAxis.x * transform.right) + (moveAxis.y * transform.forward)) * moveSpeed;
 
             rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
         }

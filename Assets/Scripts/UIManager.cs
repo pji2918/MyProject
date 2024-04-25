@@ -180,8 +180,8 @@ public class UIManager : MonoBehaviour
 
         warningText.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(2f);
 
-        warningText.gameObject.SetActive(true);
+        warningText.gameObject.SetActive(false);
     }
 }
