@@ -301,6 +301,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else if (holdingItem == null && input.actions["Interact"].IsPressed() && rb.velocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
                     {
+                        float itemEquipTime = hit.collider.GetComponent<DroppedItem>().GetItem.EquipTime;
                         isGetting = true;
                         UIManager.instance.interactText.gameObject.SetActive(false);
 
@@ -308,14 +309,23 @@ public class PlayerController : MonoBehaviour
 
                         UIManager.instance.progressBarContainer.SetActive(true);
                         currentActionTime += Time.deltaTime;
-                        UIManager.instance.progressBar.fillAmount = currentActionTime / 1f;
-                        UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", 1f - currentActionTime);
+                        UIManager.instance.progressBar.fillAmount = currentActionTime / itemEquipTime;
+                        UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", itemEquipTime - currentActionTime);
 
-                        if (currentActionTime >= 1f)
+                        if (currentActionTime >= itemEquipTime)
                         {
                             UIManager.instance.progressBarContainer.SetActive(false);
                             score += 10;
                             isGetting = false;
+
+                            if (hit.collider.GetComponent<DroppedItem>().GetItem is Goods)
+                            {
+                                GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+                                foreach (var i in enemys)
+                                {
+                                    i.GetComponent<UnityEngine.AI.NavMeshAgent>().speed = 5;
+                                }
+                            }
 
                             hit.collider.GetComponent<DroppedItem>().ToPlayerInventory();
                         }
@@ -512,11 +522,19 @@ public class PlayerController : MonoBehaviour
             {
                 UIManager.instance.ItemUI.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0} / {1}", 1, 1);
             }
-
         }
         else
         {
             UIManager.instance.ItemUI.SetActive(false);
+        }
+
+        if (inventory.Contains(goods))
+        {
+            moveSpeed = 5 / 2;
+        }
+        else
+        {
+            moveSpeed = 5;
         }
 
         if (sleepTimer > 0)
@@ -542,6 +560,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    [SerializeField] private Goods goods;
     private float sleepTimer = 0f;
 
     void FixedUpdate()
