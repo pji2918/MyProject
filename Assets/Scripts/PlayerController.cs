@@ -62,6 +62,8 @@ public class PlayerController : MonoBehaviour
         inventory = defaultItems;
     }
 
+    [SerializeField] private GameObject powerCore;
+
     private float xRotation;
     private float yRotation;
 
@@ -320,6 +322,10 @@ public class PlayerController : MonoBehaviour
 
                             if (hit.collider.GetComponent<DroppedItem>().GetItem is Goods)
                             {
+                                dlight.SetActive(false);
+                                gvolume.SetActive(false);
+                                gvolumeDark.SetActive(true);
+
                                 GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
                                 foreach (var i in enemys)
                                 {
@@ -333,6 +339,61 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         isGetting = false;
+                    }
+                }
+            }
+            else if (hit.collider.CompareTag("Power"))
+            {
+                if (holdingItem is Goods)
+                {
+                    if (!isInvOpening && !isDoorOpening)
+                    {
+                        UIManager.instance.interactText.gameObject.SetActive(true);
+
+                        UIManager.instance.interactText.text = "F를 길게 눌러 전력 공급";
+
+                        if (input.actions["Interact"].IsPressed() && rb.velocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
+                        {
+                            float itemEquipTime = 5f;
+                            isGetting = true;
+                            UIManager.instance.interactText.gameObject.SetActive(false);
+
+                            UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "전력 공급 중...";
+
+                            UIManager.instance.progressBarContainer.SetActive(true);
+                            currentActionTime += Time.deltaTime;
+                            UIManager.instance.progressBar.fillAmount = currentActionTime / itemEquipTime;
+                            UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", itemEquipTime - currentActionTime);
+
+                            if (currentActionTime >= itemEquipTime)
+                            {
+                                UIManager.instance.progressBarContainer.SetActive(false);
+                                score += 10;
+                                isGetting = false;
+
+                                holdingItem = null;
+                                inventory[System.Array.IndexOf(inventory, goods)] = null;
+
+                                GameObject core = Instantiate(powerCore, new Vector3(-1.5639448165893555f, 11.100000381469727f, -49.39014434814453f), Quaternion.identity);
+
+                                core.transform.parent = GameObject.FindGameObjectWithTag("Power").transform;
+
+                                FindObjectOfType<Lift>().MoveLift();
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (!FindObjectOfType<Lift>().isMoving)
+                    {
+                        UIManager.instance.interactText.gameObject.SetActive(true);
+                        UIManager.instance.interactText.text = "전력을 공급하려면 공급원이 필요합니다.";
+                    }
+                    else
+                    {
+                        UIManager.instance.interactText.gameObject.SetActive(true);
+                        UIManager.instance.interactText.text = "리프트 상승 중...";
                     }
                 }
             }
@@ -559,6 +620,8 @@ public class PlayerController : MonoBehaviour
             sleepTimer = 0;
         }
     }
+
+    [SerializeField] GameObject dlight, gvolume, gvolumeDark;
 
     [SerializeField] private Goods goods;
     private float sleepTimer = 0f;

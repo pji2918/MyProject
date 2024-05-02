@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/StartHell.unity
+    guid: c4aa3286d6389164881c5e97fa86882b
+  - enabled: 1
     path: Assets/Scenes/MapHell.unity
     guid: 9aabcc849104aa84aaa10015bc86478f
+  - enabled: 1
+    path: Assets/Scenes/EndHell.unity
+    guid: 215f68129186fbd459f8211eecb811c0
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729

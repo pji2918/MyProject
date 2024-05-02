@@ -9,6 +9,8 @@ TagManager:
   - SLP-300
   - Floor
   - Wall
+  - Power
+  - Enemy
   layers:
   - Default
   - TransparentFX
