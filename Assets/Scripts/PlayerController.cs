@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (holdingItem != null && controllable)
                 {
-                    if (rb.velocity == Vector3.zero)
+                    if (rb.linearVelocity == Vector3.zero)
                     {
                         isInvOpening = true;
                         UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "주머니에 아이템 넣는 중...";
@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (controllable)
                 {
-                    if (rb.velocity == Vector3.zero)
+                    if (rb.linearVelocity == Vector3.zero)
                     {
                         isInvOpening = true;
                         UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "주머니 여는 중...";
@@ -240,7 +240,7 @@ public class PlayerController : MonoBehaviour
                         UIManager.instance.interactText.gameObject.SetActive(true);
                         UIManager.instance.interactText.text = "F를 길게 눌러 문 잠금 해제";
 
-                        if (input.actions["Interact"].IsPressed() && rb.velocity == Vector3.zero)
+                        if (input.actions["Interact"].IsPressed() && rb.linearVelocity == Vector3.zero)
                         {
                             isDoorOpening = true;
                             UIManager.instance.interactText.gameObject.SetActive(false);
@@ -301,7 +301,7 @@ public class PlayerController : MonoBehaviour
                     {
                         UIManager.instance.ShowWarning("아이템을 주으려면 먼저 들고 있는 아이템을 주머니에 넣어야 합니다!");
                     }
-                    else if (holdingItem == null && input.actions["Interact"].IsPressed() && rb.velocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
+                    else if (holdingItem == null && input.actions["Interact"].IsPressed() && rb.linearVelocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
                     {
                         float itemEquipTime = hit.collider.GetComponent<DroppedItem>().GetItem.EquipTime;
                         isGetting = true;
@@ -352,7 +352,7 @@ public class PlayerController : MonoBehaviour
 
                         UIManager.instance.interactText.text = "F를 길게 눌러 전력 공급";
 
-                        if (input.actions["Interact"].IsPressed() && rb.velocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
+                        if (input.actions["Interact"].IsPressed() && rb.linearVelocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
                         {
                             float itemEquipTime = 5f;
                             isGetting = true;
@@ -480,7 +480,7 @@ public class PlayerController : MonoBehaviour
                     && (inventory[System.Array.IndexOf(inventory, slp300Item)] as Container).BulletCount > 0
                 )
                 {
-                    if (rb.velocity == Vector3.zero)
+                    if (rb.linearVelocity == Vector3.zero)
                     {
                         isReloading = true;
                         UIManager.instance.interactText.gameObject.SetActive(false);
@@ -546,7 +546,7 @@ public class PlayerController : MonoBehaviour
 
         if (isEquipping)
         {
-            if (rb.velocity == Vector3.zero)
+            if (rb.linearVelocity == Vector3.zero)
             {
                 currentActionTime += Time.deltaTime;
                 UIManager.instance.progressBar.fillAmount = currentActionTime / inventory[idx].EquipTime;
@@ -609,7 +609,7 @@ public class PlayerController : MonoBehaviour
 
             rb.constraints = RigidbodyConstraints.FreezeRotation;
 
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             transform.SetPositionAndRotation(new Vector3(transform.position.x, 11, transform.position.z), Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0));
             UIManager.instance.crosshair.SetActive(true);
 
@@ -634,7 +634,7 @@ public class PlayerController : MonoBehaviour
 
             Vector3 move = ((moveAxis.x * transform.right) + (moveAxis.y * transform.forward)) * moveSpeed;
 
-            rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+            rb.linearVelocity = new Vector3(move.x, rb.linearVelocity.y, move.z);
         }
     }
 

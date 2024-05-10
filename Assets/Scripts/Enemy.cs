@@ -110,7 +110,7 @@ public class Enemy : MonoBehaviour
         {
             rb.constraints = RigidbodyConstraints.FreezeAll;
 
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
 
             state = State.Warning;
             transform.SetPositionAndRotation(player.position - (player.forward * 2f), Quaternion.Euler(0, 0, 0));
@@ -224,7 +224,7 @@ public class Enemy : MonoBehaviour
 
                     rb.constraints = RigidbodyConstraints.FreezeAll;
 
-                    rb.velocity = Vector3.zero;
+                    rb.linearVelocity = Vector3.zero;
 
                     // 플레이어가 감지되었을 경우 Found 상태로 전환합니다.
                     if (targetList.Contains(player.GetComponent<Collider>()))
@@ -280,7 +280,7 @@ public class Enemy : MonoBehaviour
                         agent.enabled = true;
                         rb.constraints = RigidbodyConstraints.FreezeAll;
 
-                        rb.velocity = Vector3.zero;
+                        rb.linearVelocity = Vector3.zero;
 
                         transform.SetPositionAndRotation(new Vector3(transform.position.x, 11, transform.position.z), Quaternion.Euler(0, Random.Range(0, 360), 0));
                         state = State.Warning;
