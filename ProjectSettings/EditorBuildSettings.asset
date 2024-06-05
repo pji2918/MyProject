@@ -14,13 +14,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EndHell.unity
     guid: 215f68129186fbd459f8211eecb811c0
-  - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
-    path: Assets/Scenes/Hell3D.unity
-    guid: cb5206925da9da142b25d003cf190d5e
-  - enabled: 1
-    path: Assets/Scenes/WelcomeToHell.unity
-    guid: 9f108baa6687fb1418c4afce5c19e820
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

@@ -36,7 +36,7 @@ public class DragRay : MonoBehaviour
         {
             if (!Input.GetKey(KeyCode.LeftControl))
             {
-                foreach (ThisIsSquare i in FindObjectsOfType<ThisIsSquare>())
+                foreach (ThisIsSquare i in FindObjectsByType<ThisIsSquare>(FindObjectsSortMode.InstanceID))
                 {
                     i.Deselect();
                 }
@@ -74,7 +74,7 @@ public class DragRay : MonoBehaviour
         Vector2 min = box.anchoredPosition - (box.sizeDelta / 2);
         Vector2 max = box.anchoredPosition + (box.sizeDelta / 2);
 
-        foreach (ThisIsSquare i in FindObjectsOfType<ThisIsSquare>())
+        foreach (ThisIsSquare i in FindObjectsByType<ThisIsSquare>(FindObjectsSortMode.InstanceID))
         {
             Vector3 screenPos = Camera.main.WorldToScreenPoint(i.transform.position);
 

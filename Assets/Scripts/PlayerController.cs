@@ -378,14 +378,14 @@ public class PlayerController : MonoBehaviour
 
                                 core.transform.parent = GameObject.FindGameObjectWithTag("Power").transform;
 
-                                FindObjectOfType<Lift>().MoveLift();
+                                FindFirstObjectByType<Lift>().MoveLift();
                             }
                         }
                     }
                 }
                 else
                 {
-                    if (!FindObjectOfType<Lift>().isMoving)
+                    if (!FindFirstObjectByType<Lift>().isMoving)
                     {
                         UIManager.instance.interactText.gameObject.SetActive(true);
                         UIManager.instance.interactText.text = "전력을 공급하려면 공급원이 필요합니다.";
@@ -657,7 +657,7 @@ public class PlayerController : MonoBehaviour
         // Debug.LogWarning("위치 발각됨!");
         UIManager.instance.detectedWarning.SetActive(true);
         UIManager.instance.detectedWarning.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "CCTV에 감지됨";
-        Enemy[] enemy = FindObjectsOfType<Enemy>();
+        Enemy[] enemy = FindObjectsByType<Enemy>(FindObjectsSortMode.InstanceID);
 
         foreach (Enemy e in enemy)
         {
@@ -677,7 +677,7 @@ public class PlayerController : MonoBehaviour
 
     public void UnDetect()
     {
-        Enemy[] enemy = FindObjectsOfType<Enemy>();
+        Enemy[] enemy = FindObjectsByType<Enemy>(FindObjectsSortMode.InstanceID);
         UIManager.instance.detectedWarning.SetActive(false);
         foreach (Enemy e in enemy)
         {

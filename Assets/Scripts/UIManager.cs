@@ -110,7 +110,7 @@ public class UIManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            FindObjectOfType<PlayerController>().controllable = false;
+            FindFirstObjectByType<PlayerController>().controllable = false;
         }
         else
         {
@@ -119,7 +119,7 @@ public class UIManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            FindObjectOfType<PlayerController>().controllable = true;
+            FindFirstObjectByType<PlayerController>().controllable = true;
         }
     }
 
