@@ -234,6 +234,17 @@
                     "isOR": false
                 }
             ]
+        },
+        {
+            "name": "Android/iOS",
+            "bindingGroup": "Android/iOS",
+            "devices": [
+                {
+                    "devicePath": "<Touchscreen>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
         }
     ]
 }

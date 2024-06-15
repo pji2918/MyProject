@@ -70,6 +70,19 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        MovePlayer(); // 플레이어 이동 함수 호출
+    }
+
+    ///
+    /// <summary>
+    /// 아주 복잡한 플레이어 이동 함수입니다.
+    /// </summary>
+    /// <remarks>
+    /// 열지 마세요.
+    /// </remarks>
+    /// 
+    private void MovePlayer()
+    {
         if (controllable)
         {
             // float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
