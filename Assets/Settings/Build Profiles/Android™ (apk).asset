@@ -21,6 +21,8 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/StartHell.unity
   - m_enabled: 1
+    m_path: Assets/Scenes/MapHell.unity
+  - m_enabled: 1
     m_path: Assets/Scenes/EndHell.unity
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

@@ -1,0 +1,21 @@
+# ninja log v5
+40	157	7405609752111459	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	290bdb520bfc714d
+11	912	7405609759575950	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	47bc41a465e6251d
+158	326	7405609753778878	C:/GitHub/MyProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/33281a63/obj/armeabi-v7a/libswappywrapper.so	afa2f01f63fa628e
+24	617	7405609756662538	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	442d5c67a068d3aa
+7	721	7405609757703759	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	2dde537aa5986a5d
+18	624	7405609756729311	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	2f74ba9fd47c5b5a
+1	638	7405609756849414	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	1f59c39093af975e
+35	729	7405609757749493	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	465035481ac29beb
+28	889	7405609759392100	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	5ecc30e4e1a409
+912	1017	7405609760692169	C:/GitHub/MyProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/33281a63/obj/armeabi-v7a/libgame.so	8f3b5ad05fb5cd7c
+36	217	7405648783815360	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	290bdb520bfc714d
+218	760	7405648788400288	C:/GitHub/MyProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/33281a63/obj/armeabi-v7a/libswappywrapper.so	afa2f01f63fa628e
+8	1190	7405648793420874	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	1f59c39093af975e
+21	1193	7405648793410826	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	442d5c67a068d3aa
+25	1215	7405648793788569	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	2f74ba9fd47c5b5a
+29	1323	7405648794883262	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	465035481ac29beb
+17	1364	7405648795296520	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	2dde537aa5986a5d
+13	1520	7405648796891408	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	5ecc30e4e1a409
+2	1618	7405648797834606	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	47bc41a465e6251d
+1618	1724	7405648798982114	C:/GitHub/MyProject/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/33281a63/obj/armeabi-v7a/libgame.so	8f3b5ad05fb5cd7c
