@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
     public Item holdingItem;
 
-    private PlayerInput input;
+    [HideInInspector] public PlayerInput input;
 
     [SerializeField] private GameObject slp300;
 
@@ -71,35 +72,13 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         MovePlayer(); // 플레이어 이동 함수 호출
+        LookAround();
     }
 
-    ///
-    /// <summary>
-    /// 아주 복잡한 플레이어 이동 함수입니다.
-    /// </summary>
-    /// <remarks>
-    /// 열지 마세요.
-    /// </remarks>
-    /// 
+    // 아주 복잡한 플레이어 이동 함수입니다.
+    // 왠만하면 열지 마세요.
     private void MovePlayer()
     {
-        if (controllable)
-        {
-            // float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
-            // float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
-
-            float mouseX = input.actions["Mouse"].ReadValue<Vector2>().x * (mouseSensitivity * 50) * Time.deltaTime;
-            float mouseY = input.actions["Mouse"].ReadValue<Vector2>().y * (mouseSensitivity * 50) * Time.deltaTime;
-
-            yRotation += mouseX;
-            xRotation -= mouseY;
-
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-            playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-            transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
-        }
-
         if (input.actions["Interact"].WasReleasedThisFrame() || input.actions["Inventory"].WasReleasedThisFrame() || input.actions["Reload"].WasReleasedThisFrame())
         {
             currentActionTime = 0f;
@@ -119,7 +98,7 @@ public class PlayerController : MonoBehaviour
                         isInvOpening = true;
                         UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "주머니에 아이템 넣는 중...";
                         UIManager.instance.progressBarContainer.SetActive(true);
-                        UIManager.instance.interactText.gameObject.SetActive(false);
+                        UIManager.instance.InteractText.gameObject.SetActive(false);
                         currentActionTime += Time.deltaTime;
                         UIManager.instance.progressBar.fillAmount = currentActionTime / holdingItem.EquipTime;
                         UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", holdingItem.EquipTime - currentActionTime);
@@ -151,7 +130,7 @@ public class PlayerController : MonoBehaviour
                         isInvOpening = true;
                         UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "주머니 여는 중...";
                         UIManager.instance.progressBarContainer.SetActive(true);
-                        UIManager.instance.interactText.gameObject.SetActive(false);
+                        UIManager.instance.InteractText.gameObject.SetActive(false);
                         currentActionTime += Time.deltaTime;
                         UIManager.instance.progressBar.fillAmount = currentActionTime / inventoryOpenTime;
                         UIManager.instance.progressBarContainer.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0:0.0}", inventoryOpenTime - currentActionTime);
@@ -197,21 +176,21 @@ public class PlayerController : MonoBehaviour
                 {
                     if (!hit.transform.GetComponent<Door>().isOpening && !isInvOpening)
                     {
-                        UIManager.instance.interactText.gameObject.SetActive(true);
+                        UIManager.instance.InteractText.gameObject.SetActive(true);
 
                         if (hit.collider.GetComponent<Door>().isOpen)
                         {
-                            UIManager.instance.interactText.text = "F를 길게 눌러 문 닫기";
+                            UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + " 문 닫기";
                         }
                         else
                         {
-                            UIManager.instance.interactText.text = "F를 길게 눌러 문 열기";
+                            UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + " 문 열기";
                         }
 
                         if (input.actions["Interact"].IsPressed())
                         {
                             isDoorOpening = true;
-                            UIManager.instance.interactText.gameObject.SetActive(false);
+                            UIManager.instance.InteractText.gameObject.SetActive(false);
                             if (hit.collider.GetComponent<Door>().isOpen)
                             {
                                 UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "문 닫는 중...";
@@ -244,19 +223,19 @@ public class PlayerController : MonoBehaviour
                     isDoorOpening = false;
                     if (holdingItem == null || holdingItem is Gun)
                     {
-                        UIManager.instance.interactText.gameObject.SetActive(true);
-                        UIManager.instance.interactText.text = "이 문은 잠겨 있습니다.\n" +
+                        UIManager.instance.InteractText.gameObject.SetActive(true);
+                        UIManager.instance.InteractText.text = "이 문은 잠겨 있습니다.\n" +
                         "열려면 " + hit.collider.GetComponent<Door>().key.Description[..15] + hit.collider.GetComponent<Door>().key.ItemName + "</color>" + "가 필요합니다.";
                     }
                     else if (holdingItem is not Gun)
                     {
-                        UIManager.instance.interactText.gameObject.SetActive(true);
-                        UIManager.instance.interactText.text = "F를 길게 눌러 문 잠금 해제";
+                        UIManager.instance.InteractText.gameObject.SetActive(true);
+                        UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + " 문 잠금 해제";
 
                         if (input.actions["Interact"].IsPressed() && rb.linearVelocity == Vector3.zero)
                         {
                             isDoorOpening = true;
-                            UIManager.instance.interactText.gameObject.SetActive(false);
+                            UIManager.instance.InteractText.gameObject.SetActive(false);
                             UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "문 잠금 해제 중...";
                             UIManager.instance.progressBarContainer.SetActive(true);
                             currentActionTime += Time.deltaTime;
@@ -269,7 +248,7 @@ public class PlayerController : MonoBehaviour
                                 currentActionTime = 0f;
                                 UIManager.instance.progressBarContainer.SetActive(false);
 
-                                UIManager.instance.interactText.gameObject.SetActive(true);
+                                UIManager.instance.InteractText.gameObject.SetActive(true);
 
                                 UIManager.instance.ShowWarning("열쇠가 맞지 않습니다!");
 
@@ -306,9 +285,9 @@ public class PlayerController : MonoBehaviour
             {
                 if (!isInvOpening && !isDoorOpening)
                 {
-                    UIManager.instance.interactText.gameObject.SetActive(true);
+                    UIManager.instance.InteractText.gameObject.SetActive(true);
 
-                    UIManager.instance.interactText.text = "F를 길게 눌러 아이템 줍기";
+                    UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + "아이템 줍기";
 
                     if (holdingItem != null && input.actions["Interact"].WasPressedThisFrame())
                     {
@@ -318,7 +297,7 @@ public class PlayerController : MonoBehaviour
                     {
                         float itemEquipTime = hit.collider.GetComponent<DroppedItem>().GetItem.EquipTime;
                         isGetting = true;
-                        UIManager.instance.interactText.gameObject.SetActive(false);
+                        UIManager.instance.InteractText.gameObject.SetActive(false);
 
                         UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "아이템 줍는 중...";
 
@@ -361,15 +340,15 @@ public class PlayerController : MonoBehaviour
                 {
                     if (!isInvOpening && !isDoorOpening)
                     {
-                        UIManager.instance.interactText.gameObject.SetActive(true);
+                        UIManager.instance.InteractText.gameObject.SetActive(true);
 
-                        UIManager.instance.interactText.text = "F를 길게 눌러 전력 공급";
+                        UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + "전력 공급";
 
                         if (input.actions["Interact"].IsPressed() && rb.linearVelocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
                         {
                             float itemEquipTime = 5f;
                             isGetting = true;
-                            UIManager.instance.interactText.gameObject.SetActive(false);
+                            UIManager.instance.InteractText.gameObject.SetActive(false);
 
                             UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "전력 공급 중...";
 
@@ -400,13 +379,13 @@ public class PlayerController : MonoBehaviour
                 {
                     if (!FindFirstObjectByType<Lift>().isMoving)
                     {
-                        UIManager.instance.interactText.gameObject.SetActive(true);
-                        UIManager.instance.interactText.text = "전력을 공급하려면 공급원이 필요합니다.";
+                        UIManager.instance.InteractText.gameObject.SetActive(true);
+                        UIManager.instance.InteractText.text = "전력을 공급하려면 공급원이 필요합니다.";
                     }
                     else
                     {
-                        UIManager.instance.interactText.gameObject.SetActive(true);
-                        UIManager.instance.interactText.text = "리프트 상승 중...";
+                        UIManager.instance.InteractText.gameObject.SetActive(true);
+                        UIManager.instance.InteractText.text = "리프트 상승 중...";
                     }
                 }
             }
@@ -414,7 +393,7 @@ public class PlayerController : MonoBehaviour
             {
                 isDoorOpening = false;
                 isGetting = false;
-                UIManager.instance.interactText.gameObject.SetActive(false);
+                UIManager.instance.InteractText.gameObject.SetActive(false);
 
                 if (!isEquipping && !isInvOpening && !isReloading && !isGetting && !isDoorOpening)
                 {
@@ -427,7 +406,7 @@ public class PlayerController : MonoBehaviour
         {
             isDoorOpening = false;
             isGetting = false;
-            UIManager.instance.interactText.gameObject.SetActive(false);
+            UIManager.instance.InteractText.gameObject.SetActive(false);
 
             if (!isEquipping && !isInvOpening && !isReloading && !isGetting && !isDoorOpening)
             {
@@ -496,7 +475,7 @@ public class PlayerController : MonoBehaviour
                     if (rb.linearVelocity == Vector3.zero)
                     {
                         isReloading = true;
-                        UIManager.instance.interactText.gameObject.SetActive(false);
+                        UIManager.instance.InteractText.gameObject.SetActive(false);
                         UIManager.instance.progressBarContainer.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "재장전 중...";
                         UIManager.instance.progressBarContainer.SetActive(true);
                         currentActionTime += Time.deltaTime;
@@ -623,7 +602,7 @@ public class PlayerController : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeRotation;
 
             rb.linearVelocity = Vector3.zero;
-            transform.SetPositionAndRotation(new Vector3(transform.position.x, 11, transform.position.z), Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0));
+            transform.SetPositionAndRotation(new Vector3(transform.position.x, 11, transform.position.z), Quaternion.Euler(0, Random.Range(0, 360), 0));
             UIManager.instance.crosshair.SetActive(true);
 
             controllable = true;
@@ -631,6 +610,54 @@ public class PlayerController : MonoBehaviour
         else
         {
             sleepTimer = 0;
+        }
+    }
+
+
+    private void LookAround()
+    {
+        if (controllable)
+        {
+            if (input.currentControlScheme == "Android | iOS")
+            {
+                // if (input.actions["TouchPos"].ReadValue<Vector2>().x <= Display.main.systemWidth / 2)
+                // {
+                //     return;
+                // }
+
+                if (input.actions["isTouched"].IsPressed())
+                {
+                    List<RaycastResult> results = new List<RaycastResult>();
+
+                    EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = input.actions["TouchPos"].ReadValue<Vector2>() }, results);
+
+                    if (results.Count > 0)
+                    {
+                        foreach (var i in results)
+                        {
+                            if (i.gameObject.CompareTag("MobileUI"))
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            // float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
+            // float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
+
+            float mouseX = input.actions["Mouse"].ReadValue<Vector2>().x * (mouseSensitivity * 50) * Time.deltaTime;
+            float mouseY = input.actions["Mouse"].ReadValue<Vector2>().y * (mouseSensitivity * 50) * Time.deltaTime;
+
+            yRotation += mouseX;
+            xRotation -= mouseY;
+
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+            playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+            transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
         }
     }
 

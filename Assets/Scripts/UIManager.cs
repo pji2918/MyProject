@@ -6,16 +6,42 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Linq;
-using System;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public TextMeshProUGUI interactText, itemName, itemDescription, scoreText, gunUsage, warningText, itemNameText, gunChargeText, debugInfoText;
-    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, ItemUI, gunChargeUIContainer, crosshair;
+    public TextMeshProUGUI itemName, itemDescription, scoreText, gunUsage, warningText, itemNameText, gunChargeText, debugInfoText;
+    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, gunChargeUIContainer, crosshair;
     public Image progressBar;
     public RectTransform mouseBox;
+
+    private GameObject itemUI;
+    private TextMeshProUGUI interactText;
+
+    private Inputs input;
+
+    public GameObject ItemUI
+    {
+        get
+        {
+            return itemUI;
+        }
+    }
+    public TextMeshProUGUI InteractText
+    {
+        get
+        {
+            return interactText;
+        }
+    }
+
+
+    public GameObject itemUIWindows;
+    public TextMeshProUGUI interactTextWindows;
+    public GameObject itemUIMobile, mobileUI;
+    public TextMeshProUGUI interactTextMobile;
 
     private GameObject player;
 
@@ -35,19 +61,73 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        input = new Inputs();
+        input.System.Enable();
     }
 
     private bool debugScreenOn = false;
 
+    /// <summary>
+    /// 현재 플레이어가 사용하는 입력에 따라 상호작용 텍스트를 반환합니다.
+    /// </summary>
+    /// <param name="key">눌러야 하는 키를 입력합니다. Windows 환경에서는 반드시 제공되어야 합니다.</param>
+    /// <param name="longPress">길게 눌러야 하는가를 입력합니다.</param>
+    /// <returns>매우 굉장한 상호작용 텍스트를 마법같이 만들어 반환합니다.</returns>
+    /// <exception cref="ArgumentNullException">Windows 환경에서 눌러야 하는 키를 제공하지 않을 경우 발생합니다.</exception>
+    public string GetInteractText(string key = null, bool longPress = false)
+    {
+        switch (player.GetComponent<PlayerController>().input.currentControlScheme)
+        {
+            case "Windows":
+                {
+                    if (key == null)
+                    {
+                        throw new System.ArgumentNullException(key, "Windows 환경에서는 눌러야 하는 키를 제공해야 합니다.");
+                    }
+                    else if (longPress)
+                    {
+                        return string.Format("{0}을 길게 눌러", key);
+                    }
+                    else
+                    {
+                        return string.Format("{0}을 눌러", key);
+                    }
+                }
+            case "Android / iOS":
+                {
+                    return "상호작용하여";
+                }
+            default:
+                {
+                    return key;
+                }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (inventoryUI.activeSelf)
+        if (player.GetComponent<PlayerController>().input.currentControlScheme == "Android | iOS")
         {
-            mouseBox.position = Input.mousePosition;
+            itemUI = itemUIMobile;
+            interactText = interactTextMobile;
+
+            mobileUI.SetActive(true);
+        }
+        else if (player.GetComponent<PlayerController>().input.currentControlScheme == "Windows")
+        {
+            itemUI = itemUIWindows;
+            interactText = interactTextWindows;
+
+            mobileUI.SetActive(false);
         }
 
-        if (Input.GetKeyDown(KeyCode.F3))
+        if (inventoryUI.activeSelf)
+        {
+            mouseBox.position = input.System.MousePos.ReadValue<Vector2>();
+        }
+
+        if (input.System.Debug.WasReleasedThisFrame())
         {
             debugScreenOn = !debugScreenOn;
 
@@ -56,16 +136,23 @@ public class UIManager : MonoBehaviour
 
         if (debugScreenOn)
         {
-            if (Application.targetFrameRate == -1)
+            frameRateCap = Application.targetFrameRate;
+
+            if (frameRateCap == -1)
             {
-                frameRateCap = System.Convert.ToInt32(Screen.currentResolution.refreshRateRatio.value);
+                debugInfoText.text = string.Format("FPS: {0:0}\nDisplay: {1}x{2}", 1 / Time.smoothDeltaTime, Screen.width, Screen.height);
+
             }
             else
             {
-                frameRateCap = Application.targetFrameRate;
+                debugInfoText.text = string.Format("FPS: {0:0} / {1}\nDisplay: {2}x{3}", 1 / Time.smoothDeltaTime, frameRateCap, Screen.width, Screen.height);
             }
 
-            debugInfoText.text = string.Format("FPS: {0:0} / {1}\nDisplay: {2}x{3}", 1 / Time.smoothDeltaTime, frameRateCap, Screen.width, Screen.height);
+        }
+
+        if (input.System.Screenshot.WasReleasedThisFrame())
+        {
+            ScreenCapture.CaptureScreenshot(string.Format("{0}.png", System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         }
     }
 
@@ -152,7 +239,7 @@ public class UIManager : MonoBehaviour
 
     public void SortInventory()
     {
-        Array.Sort(player.GetComponent<PlayerController>().inventory);
+        System.Array.Sort(player.GetComponent<PlayerController>().inventory);
 
         player.GetComponent<PlayerController>().inventory = player.GetComponent<PlayerController>().inventory.OrderBy(x => x == null).ToArray();
 
