@@ -288,7 +288,7 @@ public class PlayerController : MonoBehaviour
                 {
                     UIManager.instance.InteractText.gameObject.SetActive(true);
 
-                    UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + "아이템 줍기";
+                    UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + " 아이템 줍기";
 
                     if (holdingItem != null && input.actions["Interact"].WasPressedThisFrame())
                     {
@@ -344,7 +344,7 @@ public class PlayerController : MonoBehaviour
                     {
                         UIManager.instance.InteractText.gameObject.SetActive(true);
 
-                        UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + "전력 공급";
+                        UIManager.instance.InteractText.text = UIManager.instance.GetInteractText("F", true) + " 전력 공급";
 
                         if (input.actions["Interact"].IsPressed() && rb.linearVelocity == Vector3.zero && !isEquipping && !isInvOpening && !isReloading && !isDoorOpening)
                         {
@@ -620,7 +620,7 @@ public class PlayerController : MonoBehaviour
     {
         if (controllable)
         {
-            if (input.currentControlScheme == "Android | iOS")
+            if (input.currentControlScheme == "Mobile")
             {
                 // if (input.actions["TouchPos"].ReadValue<Vector2>().x <= Display.main.systemWidth / 2)
                 // {
@@ -684,6 +684,8 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
+        UIManager.instance.DisableInputSystem();
+
         UIManager.instance.youDiedScreen.SetActive(true);
         UIManager.instance.scoreText.text = score.ToString();
         controllable = false;

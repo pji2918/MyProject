@@ -140,7 +140,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Android | iOS;PC",
+                    "groups": "PC;Mobile",
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -250,7 +250,7 @@
                     "path": "<Touchscreen>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Android | iOS",
+                    "groups": "Mobile",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -261,7 +261,7 @@
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Android | iOS;PC",
+                    "groups": "PC;Mobile",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -272,7 +272,7 @@
                     "path": "<Touchscreen>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Android | iOS",
+                    "groups": "Mobile",
                     "action": "TouchPos",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -283,7 +283,7 @@
                     "path": "<Touchscreen>/touch*/Press",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Android | iOS",
+                    "groups": "Mobile",
                     "action": "isTouched",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -329,7 +329,7 @@
                     "path": "<Keyboard>/f4",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Android | iOS;PC",
+                    "groups": "PC;Mobile",
                     "action": "Screenshot",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -340,7 +340,7 @@
                     "path": "<Keyboard>/f3",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Android | iOS;PC",
+                    "groups": "PC;Mobile",
                     "action": "Debug",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -371,14 +371,14 @@
                 },
                 {
                     "devicePath": "<Mouse>",
-                    "isOptional": true,
+                    "isOptional": false,
                     "isOR": false
                 }
             ]
         },
         {
-            "name": "Android | iOS",
-            "bindingGroup": "Android | iOS",
+            "name": "Mobile",
+            "bindingGroup": "Mobile",
             "devices": [
                 {
                     "devicePath": "<Touchscreen>",

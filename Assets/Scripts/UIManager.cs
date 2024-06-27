@@ -94,7 +94,7 @@ public class UIManager : MonoBehaviour
                         return string.Format("{0}을 눌러", key);
                     }
                 }
-            case "Android / iOS":
+            case "Mobile":
                 {
                     return "상호작용하여";
                 }
@@ -120,7 +120,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.GetComponent<PlayerController>().input.currentControlScheme == "Android | iOS")
+        if (player.GetComponent<PlayerController>().input.currentControlScheme == "Mobile")
         {
             itemUI = itemUIMobile;
             interactText = interactTextMobile;
@@ -168,6 +168,12 @@ public class UIManager : MonoBehaviour
     }
 
     private int frameRateCap;
+
+    public void DisableInputSystem()
+    {
+        input.Disable();
+        input.Dispose();
+    }
 
     public void RefreshInventory()
     {

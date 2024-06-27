@@ -55,18 +55,7 @@ MonoBehaviour:
       - rid: 4098620014088159251
       - rid: 3071236760758386697
     m_RuntimeSettings:
-      m_List:
-      - rid: 4098620014088159232
-      - rid: 4098620014088159233
-      - rid: 4098620014088159234
-      - rid: 4098620014088159236
-      - rid: 4098620014088159237
-      - rid: 4098620014088159240
-      - rid: 4098620014088159242
-      - rid: 4098620014088159244
-      - rid: 4098620014088159247
-      - rid: 4098620014088159248
-      - rid: 4098620014088159251
+      m_List: []
   m_AssetVersion: 8
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}
   m_RenderingLayerNames:
@@ -242,7 +231,7 @@ MonoBehaviour:
       type: {class: ShaderStrippingSetting, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
       data:
         m_Version: 0
-        m_ExportShaderVariants: 0
+        m_ExportShaderVariants: 1
         m_ShaderVariantLogLevel: 0
         m_StripRuntimeDebugShaders: 1
     - rid: 4098620014088159248

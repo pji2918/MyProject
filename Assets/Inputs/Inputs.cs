@@ -165,7 +165,7 @@ namespace pji2918.Input
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Android | iOS;PC"",
+                    ""groups"": ""PC;Mobile"",
                     ""action"": ""PlayerMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -275,7 +275,7 @@ namespace pji2918.Input
                     ""path"": ""<Touchscreen>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Android | iOS"",
+                    ""groups"": ""Mobile"",
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -286,7 +286,7 @@ namespace pji2918.Input
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Android | iOS;PC"",
+                    ""groups"": ""PC;Mobile"",
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -297,7 +297,7 @@ namespace pji2918.Input
                     ""path"": ""<Touchscreen>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Android | iOS"",
+                    ""groups"": ""Mobile"",
                     ""action"": ""TouchPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -308,7 +308,7 @@ namespace pji2918.Input
                     ""path"": ""<Touchscreen>/touch*/Press"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Android | iOS"",
+                    ""groups"": ""Mobile"",
                     ""action"": ""isTouched"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -354,7 +354,7 @@ namespace pji2918.Input
                     ""path"": ""<Keyboard>/f4"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Android | iOS;PC"",
+                    ""groups"": ""PC;Mobile"",
                     ""action"": ""Screenshot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -365,7 +365,7 @@ namespace pji2918.Input
                     ""path"": ""<Keyboard>/f3"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Android | iOS;PC"",
+                    ""groups"": ""PC;Mobile"",
                     ""action"": ""Debug"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -396,14 +396,14 @@ namespace pji2918.Input
                 },
                 {
                     ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": true,
+                    ""isOptional"": false,
                     ""isOR"": false
                 }
             ]
         },
         {
-            ""name"": ""Android | iOS"",
-            ""bindingGroup"": ""Android | iOS"",
+            ""name"": ""Mobile"",
+            ""bindingGroup"": ""Mobile"",
             ""devices"": [
                 {
                     ""devicePath"": ""<Touchscreen>"",
@@ -665,13 +665,13 @@ namespace pji2918.Input
                 return asset.controlSchemes[m_PCSchemeIndex];
             }
         }
-        private int m_AndroidiOSSchemeIndex = -1;
-        public InputControlScheme AndroidiOSScheme
+        private int m_MobileSchemeIndex = -1;
+        public InputControlScheme MobileScheme
         {
             get
             {
-                if (m_AndroidiOSSchemeIndex == -1) m_AndroidiOSSchemeIndex = asset.FindControlSchemeIndex("Android | iOS");
-                return asset.controlSchemes[m_AndroidiOSSchemeIndex];
+                if (m_MobileSchemeIndex == -1) m_MobileSchemeIndex = asset.FindControlSchemeIndex("Mobile");
+                return asset.controlSchemes[m_MobileSchemeIndex];
             }
         }
         public interface IPlayerActions
