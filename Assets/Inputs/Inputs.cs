@@ -16,12 +16,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine;
 
-public partial class @Inputs: IInputActionCollection2, IDisposable
+namespace pji2918.Input
 {
-    public InputActionAsset asset { get; }
-    public @Inputs()
+    public partial class @Inputs: IInputActionCollection2, IDisposable
     {
-        asset = InputActionAsset.FromJson(@"{
+        public InputActionAsset asset { get; }
+        public @Inputs()
+        {
+            asset = InputActionAsset.FromJson(@"{
     ""name"": ""Inputs"",
     ""maps"": [
         {
@@ -119,7 +121,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""PlayerMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -130,7 +132,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""PlayerMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -141,7 +143,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""PlayerMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -152,7 +154,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""PlayerMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -163,7 +165,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows;Android | iOS"",
+                    ""groups"": ""Android | iOS;PC"",
                     ""action"": ""PlayerMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -174,7 +176,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -185,7 +187,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -196,7 +198,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -207,7 +209,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -229,7 +231,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/delta/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -240,7 +242,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/delta/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -251,7 +253,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/delta/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -262,7 +264,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/delta/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -284,7 +286,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Android | iOS;Windows"",
+                    ""groups"": ""Android | iOS;PC"",
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -352,7 +354,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/f4"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows;Android | iOS"",
+                    ""groups"": ""Android | iOS;PC"",
                     ""action"": ""Screenshot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -363,7 +365,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/f3"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows;Android | iOS"",
+                    ""groups"": ""Android | iOS;PC"",
                     ""action"": ""Debug"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -374,7 +376,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Windows"",
+                    ""groups"": ""PC"",
                     ""action"": ""MousePos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -384,8 +386,8 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": [
         {
-            ""name"": ""Windows"",
-            ""bindingGroup"": ""Windows"",
+            ""name"": ""PC"",
+            ""bindingGroup"": ""PC"",
             ""devices"": [
                 {
                     ""devicePath"": ""<Keyboard>"",
@@ -394,11 +396,6 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                 },
                 {
                     ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": true,
                     ""isOR"": false
                 }
@@ -412,291 +409,287 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""devicePath"": ""<Touchscreen>"",
                     ""isOptional"": false,
                     ""isOR"": false
-                },
-                {
-                    ""devicePath"": ""<Gamepad>"",
-                    ""isOptional"": true,
-                    ""isOR"": false
                 }
             ]
         }
     ]
 }");
+            // Player
+            m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
+            m_Player_PlayerMove = m_Player.FindAction("PlayerMove", throwIfNotFound: true);
+            m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+            m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+            m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
+            m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+            m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
+            m_Player_TouchPos = m_Player.FindAction("TouchPos", throwIfNotFound: true);
+            m_Player_isTouched = m_Player.FindAction("isTouched", throwIfNotFound: true);
+            // System
+            m_System = asset.FindActionMap("System", throwIfNotFound: true);
+            m_System_Screenshot = m_System.FindAction("Screenshot", throwIfNotFound: true);
+            m_System_Debug = m_System.FindAction("Debug", throwIfNotFound: true);
+            m_System_MousePos = m_System.FindAction("MousePos", throwIfNotFound: true);
+        }
+
+        ~@Inputs()
+        {
+            Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, Inputs.Player.Disable() has not been called.");
+            Debug.Assert(!m_System.enabled, "This will cause a leak and performance issues, Inputs.System.Disable() has not been called.");
+        }
+
+        public void Dispose()
+        {
+            UnityEngine.Object.Destroy(asset);
+        }
+
+        public InputBinding? bindingMask
+        {
+            get => asset.bindingMask;
+            set => asset.bindingMask = value;
+        }
+
+        public ReadOnlyArray<InputDevice>? devices
+        {
+            get => asset.devices;
+            set => asset.devices = value;
+        }
+
+        public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+
+        public bool Contains(InputAction action)
+        {
+            return asset.Contains(action);
+        }
+
+        public IEnumerator<InputAction> GetEnumerator()
+        {
+            return asset.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Enable()
+        {
+            asset.Enable();
+        }
+
+        public void Disable()
+        {
+            asset.Disable();
+        }
+
+        public IEnumerable<InputBinding> bindings => asset.bindings;
+
+        public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
+        {
+            return asset.FindAction(actionNameOrId, throwIfNotFound);
+        }
+
+        public int FindBinding(InputBinding bindingMask, out InputAction action)
+        {
+            return asset.FindBinding(bindingMask, out action);
+        }
+
         // Player
-        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_PlayerMove = m_Player.FindAction("PlayerMove", throwIfNotFound: true);
-        m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
-        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
-        m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
-        m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
-        m_Player_TouchPos = m_Player.FindAction("TouchPos", throwIfNotFound: true);
-        m_Player_isTouched = m_Player.FindAction("isTouched", throwIfNotFound: true);
+        private readonly InputActionMap m_Player;
+        private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
+        private readonly InputAction m_Player_PlayerMove;
+        private readonly InputAction m_Player_Inventory;
+        private readonly InputAction m_Player_Interact;
+        private readonly InputAction m_Player_Reload;
+        private readonly InputAction m_Player_Fire;
+        private readonly InputAction m_Player_Mouse;
+        private readonly InputAction m_Player_TouchPos;
+        private readonly InputAction m_Player_isTouched;
+        public struct PlayerActions
+        {
+            private @Inputs m_Wrapper;
+            public PlayerActions(@Inputs wrapper) { m_Wrapper = wrapper; }
+            public InputAction @PlayerMove => m_Wrapper.m_Player_PlayerMove;
+            public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+            public InputAction @Interact => m_Wrapper.m_Player_Interact;
+            public InputAction @Reload => m_Wrapper.m_Player_Reload;
+            public InputAction @Fire => m_Wrapper.m_Player_Fire;
+            public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
+            public InputAction @TouchPos => m_Wrapper.m_Player_TouchPos;
+            public InputAction @isTouched => m_Wrapper.m_Player_isTouched;
+            public InputActionMap Get() { return m_Wrapper.m_Player; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
+                @PlayerMove.started += instance.OnPlayerMove;
+                @PlayerMove.performed += instance.OnPlayerMove;
+                @PlayerMove.canceled += instance.OnPlayerMove;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
+                @Mouse.started += instance.OnMouse;
+                @Mouse.performed += instance.OnMouse;
+                @Mouse.canceled += instance.OnMouse;
+                @TouchPos.started += instance.OnTouchPos;
+                @TouchPos.performed += instance.OnTouchPos;
+                @TouchPos.canceled += instance.OnTouchPos;
+                @isTouched.started += instance.OnIsTouched;
+                @isTouched.performed += instance.OnIsTouched;
+                @isTouched.canceled += instance.OnIsTouched;
+            }
+
+            private void UnregisterCallbacks(IPlayerActions instance)
+            {
+                @PlayerMove.started -= instance.OnPlayerMove;
+                @PlayerMove.performed -= instance.OnPlayerMove;
+                @PlayerMove.canceled -= instance.OnPlayerMove;
+                @Inventory.started -= instance.OnInventory;
+                @Inventory.performed -= instance.OnInventory;
+                @Inventory.canceled -= instance.OnInventory;
+                @Interact.started -= instance.OnInteract;
+                @Interact.performed -= instance.OnInteract;
+                @Interact.canceled -= instance.OnInteract;
+                @Reload.started -= instance.OnReload;
+                @Reload.performed -= instance.OnReload;
+                @Reload.canceled -= instance.OnReload;
+                @Fire.started -= instance.OnFire;
+                @Fire.performed -= instance.OnFire;
+                @Fire.canceled -= instance.OnFire;
+                @Mouse.started -= instance.OnMouse;
+                @Mouse.performed -= instance.OnMouse;
+                @Mouse.canceled -= instance.OnMouse;
+                @TouchPos.started -= instance.OnTouchPos;
+                @TouchPos.performed -= instance.OnTouchPos;
+                @TouchPos.canceled -= instance.OnTouchPos;
+                @isTouched.started -= instance.OnIsTouched;
+                @isTouched.performed -= instance.OnIsTouched;
+                @isTouched.canceled -= instance.OnIsTouched;
+            }
+
+            public void RemoveCallbacks(IPlayerActions instance)
+            {
+                if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerActions @Player => new PlayerActions(this);
+
         // System
-        m_System = asset.FindActionMap("System", throwIfNotFound: true);
-        m_System_Screenshot = m_System.FindAction("Screenshot", throwIfNotFound: true);
-        m_System_Debug = m_System.FindAction("Debug", throwIfNotFound: true);
-        m_System_MousePos = m_System.FindAction("MousePos", throwIfNotFound: true);
-    }
-
-    ~@Inputs()
-    {
-        Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, Inputs.Player.Disable() has not been called.");
-        Debug.Assert(!m_System.enabled, "This will cause a leak and performance issues, Inputs.System.Disable() has not been called.");
-    }
-
-    public void Dispose()
-    {
-        UnityEngine.Object.Destroy(asset);
-    }
-
-    public InputBinding? bindingMask
-    {
-        get => asset.bindingMask;
-        set => asset.bindingMask = value;
-    }
-
-    public ReadOnlyArray<InputDevice>? devices
-    {
-        get => asset.devices;
-        set => asset.devices = value;
-    }
-
-    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
-
-    public bool Contains(InputAction action)
-    {
-        return asset.Contains(action);
-    }
-
-    public IEnumerator<InputAction> GetEnumerator()
-    {
-        return asset.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
-    public void Enable()
-    {
-        asset.Enable();
-    }
-
-    public void Disable()
-    {
-        asset.Disable();
-    }
-
-    public IEnumerable<InputBinding> bindings => asset.bindings;
-
-    public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
-    {
-        return asset.FindAction(actionNameOrId, throwIfNotFound);
-    }
-
-    public int FindBinding(InputBinding bindingMask, out InputAction action)
-    {
-        return asset.FindBinding(bindingMask, out action);
-    }
-
-    // Player
-    private readonly InputActionMap m_Player;
-    private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_PlayerMove;
-    private readonly InputAction m_Player_Inventory;
-    private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_Reload;
-    private readonly InputAction m_Player_Fire;
-    private readonly InputAction m_Player_Mouse;
-    private readonly InputAction m_Player_TouchPos;
-    private readonly InputAction m_Player_isTouched;
-    public struct PlayerActions
-    {
-        private @Inputs m_Wrapper;
-        public PlayerActions(@Inputs wrapper) { m_Wrapper = wrapper; }
-        public InputAction @PlayerMove => m_Wrapper.m_Player_PlayerMove;
-        public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
-        public InputAction @Interact => m_Wrapper.m_Player_Interact;
-        public InputAction @Reload => m_Wrapper.m_Player_Reload;
-        public InputAction @Fire => m_Wrapper.m_Player_Fire;
-        public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
-        public InputAction @TouchPos => m_Wrapper.m_Player_TouchPos;
-        public InputAction @isTouched => m_Wrapper.m_Player_isTouched;
-        public InputActionMap Get() { return m_Wrapper.m_Player; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-        public void AddCallbacks(IPlayerActions instance)
+        private readonly InputActionMap m_System;
+        private List<ISystemActions> m_SystemActionsCallbackInterfaces = new List<ISystemActions>();
+        private readonly InputAction m_System_Screenshot;
+        private readonly InputAction m_System_Debug;
+        private readonly InputAction m_System_MousePos;
+        public struct SystemActions
         {
-            if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @PlayerMove.started += instance.OnPlayerMove;
-            @PlayerMove.performed += instance.OnPlayerMove;
-            @PlayerMove.canceled += instance.OnPlayerMove;
-            @Inventory.started += instance.OnInventory;
-            @Inventory.performed += instance.OnInventory;
-            @Inventory.canceled += instance.OnInventory;
-            @Interact.started += instance.OnInteract;
-            @Interact.performed += instance.OnInteract;
-            @Interact.canceled += instance.OnInteract;
-            @Reload.started += instance.OnReload;
-            @Reload.performed += instance.OnReload;
-            @Reload.canceled += instance.OnReload;
-            @Fire.started += instance.OnFire;
-            @Fire.performed += instance.OnFire;
-            @Fire.canceled += instance.OnFire;
-            @Mouse.started += instance.OnMouse;
-            @Mouse.performed += instance.OnMouse;
-            @Mouse.canceled += instance.OnMouse;
-            @TouchPos.started += instance.OnTouchPos;
-            @TouchPos.performed += instance.OnTouchPos;
-            @TouchPos.canceled += instance.OnTouchPos;
-            @isTouched.started += instance.OnIsTouched;
-            @isTouched.performed += instance.OnIsTouched;
-            @isTouched.canceled += instance.OnIsTouched;
-        }
+            private @Inputs m_Wrapper;
+            public SystemActions(@Inputs wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Screenshot => m_Wrapper.m_System_Screenshot;
+            public InputAction @Debug => m_Wrapper.m_System_Debug;
+            public InputAction @MousePos => m_Wrapper.m_System_MousePos;
+            public InputActionMap Get() { return m_Wrapper.m_System; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(SystemActions set) { return set.Get(); }
+            public void AddCallbacks(ISystemActions instance)
+            {
+                if (instance == null || m_Wrapper.m_SystemActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_SystemActionsCallbackInterfaces.Add(instance);
+                @Screenshot.started += instance.OnScreenshot;
+                @Screenshot.performed += instance.OnScreenshot;
+                @Screenshot.canceled += instance.OnScreenshot;
+                @Debug.started += instance.OnDebug;
+                @Debug.performed += instance.OnDebug;
+                @Debug.canceled += instance.OnDebug;
+                @MousePos.started += instance.OnMousePos;
+                @MousePos.performed += instance.OnMousePos;
+                @MousePos.canceled += instance.OnMousePos;
+            }
 
-        private void UnregisterCallbacks(IPlayerActions instance)
-        {
-            @PlayerMove.started -= instance.OnPlayerMove;
-            @PlayerMove.performed -= instance.OnPlayerMove;
-            @PlayerMove.canceled -= instance.OnPlayerMove;
-            @Inventory.started -= instance.OnInventory;
-            @Inventory.performed -= instance.OnInventory;
-            @Inventory.canceled -= instance.OnInventory;
-            @Interact.started -= instance.OnInteract;
-            @Interact.performed -= instance.OnInteract;
-            @Interact.canceled -= instance.OnInteract;
-            @Reload.started -= instance.OnReload;
-            @Reload.performed -= instance.OnReload;
-            @Reload.canceled -= instance.OnReload;
-            @Fire.started -= instance.OnFire;
-            @Fire.performed -= instance.OnFire;
-            @Fire.canceled -= instance.OnFire;
-            @Mouse.started -= instance.OnMouse;
-            @Mouse.performed -= instance.OnMouse;
-            @Mouse.canceled -= instance.OnMouse;
-            @TouchPos.started -= instance.OnTouchPos;
-            @TouchPos.performed -= instance.OnTouchPos;
-            @TouchPos.canceled -= instance.OnTouchPos;
-            @isTouched.started -= instance.OnIsTouched;
-            @isTouched.performed -= instance.OnIsTouched;
-            @isTouched.canceled -= instance.OnIsTouched;
-        }
+            private void UnregisterCallbacks(ISystemActions instance)
+            {
+                @Screenshot.started -= instance.OnScreenshot;
+                @Screenshot.performed -= instance.OnScreenshot;
+                @Screenshot.canceled -= instance.OnScreenshot;
+                @Debug.started -= instance.OnDebug;
+                @Debug.performed -= instance.OnDebug;
+                @Debug.canceled -= instance.OnDebug;
+                @MousePos.started -= instance.OnMousePos;
+                @MousePos.performed -= instance.OnMousePos;
+                @MousePos.canceled -= instance.OnMousePos;
+            }
 
-        public void RemoveCallbacks(IPlayerActions instance)
-        {
-            if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
+            public void RemoveCallbacks(ISystemActions instance)
+            {
+                if (m_Wrapper.m_SystemActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
 
-        public void SetCallbacks(IPlayerActions instance)
-        {
-            foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
+            public void SetCallbacks(ISystemActions instance)
+            {
+                foreach (var item in m_Wrapper.m_SystemActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_SystemActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
         }
-    }
-    public PlayerActions @Player => new PlayerActions(this);
-
-    // System
-    private readonly InputActionMap m_System;
-    private List<ISystemActions> m_SystemActionsCallbackInterfaces = new List<ISystemActions>();
-    private readonly InputAction m_System_Screenshot;
-    private readonly InputAction m_System_Debug;
-    private readonly InputAction m_System_MousePos;
-    public struct SystemActions
-    {
-        private @Inputs m_Wrapper;
-        public SystemActions(@Inputs wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Screenshot => m_Wrapper.m_System_Screenshot;
-        public InputAction @Debug => m_Wrapper.m_System_Debug;
-        public InputAction @MousePos => m_Wrapper.m_System_MousePos;
-        public InputActionMap Get() { return m_Wrapper.m_System; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(SystemActions set) { return set.Get(); }
-        public void AddCallbacks(ISystemActions instance)
+        public SystemActions @System => new SystemActions(this);
+        private int m_PCSchemeIndex = -1;
+        public InputControlScheme PCScheme
         {
-            if (instance == null || m_Wrapper.m_SystemActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_SystemActionsCallbackInterfaces.Add(instance);
-            @Screenshot.started += instance.OnScreenshot;
-            @Screenshot.performed += instance.OnScreenshot;
-            @Screenshot.canceled += instance.OnScreenshot;
-            @Debug.started += instance.OnDebug;
-            @Debug.performed += instance.OnDebug;
-            @Debug.canceled += instance.OnDebug;
-            @MousePos.started += instance.OnMousePos;
-            @MousePos.performed += instance.OnMousePos;
-            @MousePos.canceled += instance.OnMousePos;
+            get
+            {
+                if (m_PCSchemeIndex == -1) m_PCSchemeIndex = asset.FindControlSchemeIndex("PC");
+                return asset.controlSchemes[m_PCSchemeIndex];
+            }
         }
-
-        private void UnregisterCallbacks(ISystemActions instance)
+        private int m_AndroidiOSSchemeIndex = -1;
+        public InputControlScheme AndroidiOSScheme
         {
-            @Screenshot.started -= instance.OnScreenshot;
-            @Screenshot.performed -= instance.OnScreenshot;
-            @Screenshot.canceled -= instance.OnScreenshot;
-            @Debug.started -= instance.OnDebug;
-            @Debug.performed -= instance.OnDebug;
-            @Debug.canceled -= instance.OnDebug;
-            @MousePos.started -= instance.OnMousePos;
-            @MousePos.performed -= instance.OnMousePos;
-            @MousePos.canceled -= instance.OnMousePos;
+            get
+            {
+                if (m_AndroidiOSSchemeIndex == -1) m_AndroidiOSSchemeIndex = asset.FindControlSchemeIndex("Android | iOS");
+                return asset.controlSchemes[m_AndroidiOSSchemeIndex];
+            }
         }
-
-        public void RemoveCallbacks(ISystemActions instance)
+        public interface IPlayerActions
         {
-            if (m_Wrapper.m_SystemActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
+            void OnPlayerMove(InputAction.CallbackContext context);
+            void OnInventory(InputAction.CallbackContext context);
+            void OnInteract(InputAction.CallbackContext context);
+            void OnReload(InputAction.CallbackContext context);
+            void OnFire(InputAction.CallbackContext context);
+            void OnMouse(InputAction.CallbackContext context);
+            void OnTouchPos(InputAction.CallbackContext context);
+            void OnIsTouched(InputAction.CallbackContext context);
         }
-
-        public void SetCallbacks(ISystemActions instance)
+        public interface ISystemActions
         {
-            foreach (var item in m_Wrapper.m_SystemActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_SystemActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
+            void OnScreenshot(InputAction.CallbackContext context);
+            void OnDebug(InputAction.CallbackContext context);
+            void OnMousePos(InputAction.CallbackContext context);
         }
-    }
-    public SystemActions @System => new SystemActions(this);
-    private int m_WindowsSchemeIndex = -1;
-    public InputControlScheme WindowsScheme
-    {
-        get
-        {
-            if (m_WindowsSchemeIndex == -1) m_WindowsSchemeIndex = asset.FindControlSchemeIndex("Windows");
-            return asset.controlSchemes[m_WindowsSchemeIndex];
-        }
-    }
-    private int m_AndroidiOSSchemeIndex = -1;
-    public InputControlScheme AndroidiOSScheme
-    {
-        get
-        {
-            if (m_AndroidiOSSchemeIndex == -1) m_AndroidiOSSchemeIndex = asset.FindControlSchemeIndex("Android | iOS");
-            return asset.controlSchemes[m_AndroidiOSSchemeIndex];
-        }
-    }
-    public interface IPlayerActions
-    {
-        void OnPlayerMove(InputAction.CallbackContext context);
-        void OnInventory(InputAction.CallbackContext context);
-        void OnInteract(InputAction.CallbackContext context);
-        void OnReload(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
-        void OnMouse(InputAction.CallbackContext context);
-        void OnTouchPos(InputAction.CallbackContext context);
-        void OnIsTouched(InputAction.CallbackContext context);
-    }
-    public interface ISystemActions
-    {
-        void OnScreenshot(InputAction.CallbackContext context);
-        void OnDebug(InputAction.CallbackContext context);
-        void OnMousePos(InputAction.CallbackContext context);
     }
 }

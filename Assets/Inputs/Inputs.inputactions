@@ -96,7 +96,7 @@
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -107,7 +107,7 @@
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -118,7 +118,7 @@
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -129,7 +129,7 @@
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -140,7 +140,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows;Android | iOS",
+                    "groups": "Android | iOS;PC",
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -151,7 +151,7 @@
                     "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -162,7 +162,7 @@
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -173,7 +173,7 @@
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -184,7 +184,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Windows",
+                    "groups": "PC",
                     "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -206,7 +206,7 @@
                     "path": "<Mouse>/delta/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows",
+                    "groups": "PC",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -217,7 +217,7 @@
                     "path": "<Mouse>/delta/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows",
+                    "groups": "PC",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -228,7 +228,7 @@
                     "path": "<Mouse>/delta/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows",
+                    "groups": "PC",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -239,7 +239,7 @@
                     "path": "<Mouse>/delta/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows",
+                    "groups": "PC",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -261,7 +261,7 @@
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Android | iOS;Windows",
+                    "groups": "Android | iOS;PC",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -329,7 +329,7 @@
                     "path": "<Keyboard>/f4",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows;Android | iOS",
+                    "groups": "Android | iOS;PC",
                     "action": "Screenshot",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -340,7 +340,7 @@
                     "path": "<Keyboard>/f3",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows;Android | iOS",
+                    "groups": "Android | iOS;PC",
                     "action": "Debug",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -351,7 +351,7 @@
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Windows",
+                    "groups": "PC",
                     "action": "MousePos",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -361,8 +361,8 @@
     ],
     "controlSchemes": [
         {
-            "name": "Windows",
-            "bindingGroup": "Windows",
+            "name": "PC",
+            "bindingGroup": "PC",
             "devices": [
                 {
                     "devicePath": "<Keyboard>",
@@ -371,11 +371,6 @@
                 },
                 {
                     "devicePath": "<Mouse>",
-                    "isOptional": false,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<Gamepad>",
                     "isOptional": true,
                     "isOR": false
                 }
@@ -388,11 +383,6 @@
                 {
                     "devicePath": "<Touchscreen>",
                     "isOptional": false,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<Gamepad>",
-                    "isOptional": true,
                     "isOR": false
                 }
             ]

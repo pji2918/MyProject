@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Drawing;
 
 public class PlayerController : MonoBehaviour
 {
@@ -315,8 +316,9 @@ public class PlayerController : MonoBehaviour
                             if (hit.collider.GetComponent<DroppedItem>().GetItem is Goods)
                             {
                                 dlight.SetActive(false);
-                                gvolume.SetActive(false);
-                                gvolumeDark.SetActive(true);
+
+                                RenderSettings.fogColor = new Color32(50, 24, 118, 255);
+                                RenderSettings.fogDensity = 0.5f;
 
                                 GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
                                 foreach (var i in enemys)
@@ -613,7 +615,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
+    public Material skyboxDark;
     private void LookAround()
     {
         if (controllable)

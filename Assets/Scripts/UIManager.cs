@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.Linq;
 using UnityEngine.InputSystem;
+using pji2918.Input;
 
 public class UIManager : MonoBehaviour
 {
@@ -19,8 +20,6 @@ public class UIManager : MonoBehaviour
 
     private GameObject itemUI;
     private TextMeshProUGUI interactText;
-
-    private Inputs input;
 
     public GameObject ItemUI
     {
@@ -45,6 +44,8 @@ public class UIManager : MonoBehaviour
 
     private GameObject player;
 
+    private Inputs input;
+
     void Awake()
     {
         if (instance == null)
@@ -62,7 +63,7 @@ public class UIManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         input = new Inputs();
-        input.System.Enable();
+        input.Enable();
     }
 
     private bool debugScreenOn = false;
@@ -78,7 +79,7 @@ public class UIManager : MonoBehaviour
     {
         switch (player.GetComponent<PlayerController>().input.currentControlScheme)
         {
-            case "Windows":
+            case "PC":
                 {
                     if (key == null)
                     {
@@ -104,6 +105,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowOrHideDebugScreen()
+    {
+        debugScreenOn = !debugScreenOn;
+
+        debugInfoText.gameObject.SetActive(debugScreenOn);
+    }
+
+    public void TakeScreenshot()
+    {
+        ScreenCapture.CaptureScreenshot(string.Format("{0}.png", System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -114,7 +127,7 @@ public class UIManager : MonoBehaviour
 
             mobileUI.SetActive(true);
         }
-        else if (player.GetComponent<PlayerController>().input.currentControlScheme == "Windows")
+        else if (player.GetComponent<PlayerController>().input.currentControlScheme == "PC")
         {
             itemUI = itemUIWindows;
             interactText = interactTextWindows;
@@ -127,11 +140,14 @@ public class UIManager : MonoBehaviour
             mouseBox.position = input.System.MousePos.ReadValue<Vector2>();
         }
 
-        if (input.System.Debug.WasReleasedThisFrame())
+        if (input.System.Screenshot.WasPressedThisFrame())
         {
-            debugScreenOn = !debugScreenOn;
+            TakeScreenshot();
+        }
 
-            debugInfoText.gameObject.SetActive(debugScreenOn);
+        if (input.System.Debug.WasPressedThisFrame())
+        {
+            ShowOrHideDebugScreen();
         }
 
         if (debugScreenOn)
@@ -148,11 +164,6 @@ public class UIManager : MonoBehaviour
                 debugInfoText.text = string.Format("FPS: {0:0} / {1}\nDisplay: {2}x{3}", 1 / Time.smoothDeltaTime, frameRateCap, Screen.width, Screen.height);
             }
 
-        }
-
-        if (input.System.Screenshot.WasReleasedThisFrame())
-        {
-            ScreenCapture.CaptureScreenshot(string.Format("{0}.png", System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")));
         }
     }
 
