@@ -140,7 +140,7 @@
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "PC;Mobile",
+                    "groups": "Mobile;PC",
                     "action": "PlayerMove",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -158,11 +158,33 @@
                 },
                 {
                     "name": "",
+                    "id": "e753dae9-84c2-4c50-99fa-9e94d709c55b",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";PC;Mobile",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "e98f760b-b826-4dbc-a800-d6a945ead46a",
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "176f8ab6-f71f-4718-91f6-3b612904269e",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mobile;PC",
                     "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -180,11 +202,33 @@
                 },
                 {
                     "name": "",
+                    "id": "db79376f-ea64-4f47-b166-80246222b1b9",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mobile;PC",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "dd7de9e0-7474-41bd-8bfb-d7292fd9daa4",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10c7c12d-aad1-449d-8666-6035f0ad5111",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mobile;PC",
                     "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -355,6 +399,17 @@
                     "action": "MousePos",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b61ca9b9-006b-45a3-b753-17222f3067d9",
+                    "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mobile",
+                    "action": "MousePos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
@@ -383,6 +438,16 @@
                 {
                     "devicePath": "<Touchscreen>",
                     "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": true,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<AndroidJoystick>",
+                    "isOptional": true,
                     "isOR": false
                 }
             ]

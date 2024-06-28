@@ -419,7 +419,10 @@ public class PlayerController : MonoBehaviour
 
         if (holdingItem is Gun)
         {
-            UIManager.instance.gunUsage.gameObject.SetActive(true);
+            if (input.currentControlScheme != "Mobile")
+            {
+                UIManager.instance.gunUsage.gameObject.SetActive(true);
+            }
 
             if (controllable)
             {

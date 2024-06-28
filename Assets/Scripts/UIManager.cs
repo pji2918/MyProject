@@ -177,7 +177,7 @@ public class UIManager : MonoBehaviour
 
     public void RefreshInventory()
     {
-        GameObject inventorySlot = inventoryUI.transform.GetChild(3).gameObject;
+        GameObject inventorySlot = inventoryUI.transform.GetChild(1).GetChild(3).gameObject;
 
         foreach (var (value, i) in player.GetComponent<PlayerController>().inventory.Select((value, i) => (value, i)))
         {
