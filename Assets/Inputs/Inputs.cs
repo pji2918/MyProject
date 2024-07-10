@@ -389,6 +389,15 @@ namespace pji2918.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""357a6b0b-c356-467d-a996-c967a1d700cc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -433,6 +442,28 @@ namespace pji2918.Input
                     ""processors"": """",
                     ""groups"": "";Mobile"",
                     ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c550cdc4-69a3-4121-adc1-b4514466de53"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";PC"",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5a3bdff9-2399-46b7-a4fa-a3b1e8e843aa"",
+                    ""path"": ""*/{Back}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Mobile"",
+                    ""action"": ""Escape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -494,6 +525,7 @@ namespace pji2918.Input
             m_System_Screenshot = m_System.FindAction("Screenshot", throwIfNotFound: true);
             m_System_Debug = m_System.FindAction("Debug", throwIfNotFound: true);
             m_System_MousePos = m_System.FindAction("MousePos", throwIfNotFound: true);
+            m_System_Escape = m_System.FindAction("Escape", throwIfNotFound: true);
         }
 
         ~@Inputs()
@@ -666,6 +698,7 @@ namespace pji2918.Input
         private readonly InputAction m_System_Screenshot;
         private readonly InputAction m_System_Debug;
         private readonly InputAction m_System_MousePos;
+        private readonly InputAction m_System_Escape;
         public struct SystemActions
         {
             private @Inputs m_Wrapper;
@@ -673,6 +706,7 @@ namespace pji2918.Input
             public InputAction @Screenshot => m_Wrapper.m_System_Screenshot;
             public InputAction @Debug => m_Wrapper.m_System_Debug;
             public InputAction @MousePos => m_Wrapper.m_System_MousePos;
+            public InputAction @Escape => m_Wrapper.m_System_Escape;
             public InputActionMap Get() { return m_Wrapper.m_System; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -691,6 +725,9 @@ namespace pji2918.Input
                 @MousePos.started += instance.OnMousePos;
                 @MousePos.performed += instance.OnMousePos;
                 @MousePos.canceled += instance.OnMousePos;
+                @Escape.started += instance.OnEscape;
+                @Escape.performed += instance.OnEscape;
+                @Escape.canceled += instance.OnEscape;
             }
 
             private void UnregisterCallbacks(ISystemActions instance)
@@ -704,6 +741,9 @@ namespace pji2918.Input
                 @MousePos.started -= instance.OnMousePos;
                 @MousePos.performed -= instance.OnMousePos;
                 @MousePos.canceled -= instance.OnMousePos;
+                @Escape.started -= instance.OnEscape;
+                @Escape.performed -= instance.OnEscape;
+                @Escape.canceled -= instance.OnEscape;
             }
 
             public void RemoveCallbacks(ISystemActions instance)
@@ -755,6 +795,7 @@ namespace pji2918.Input
             void OnScreenshot(InputAction.CallbackContext context);
             void OnDebug(InputAction.CallbackContext context);
             void OnMousePos(InputAction.CallbackContext context);
+            void OnEscape(InputAction.CallbackContext context);
         }
     }
 }

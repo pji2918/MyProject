@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Linq;
-using UnityEngine.InputSystem;
 using pji2918.Input;
 
 public class UIManager : MonoBehaviour
@@ -17,9 +16,17 @@ public class UIManager : MonoBehaviour
     public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, gunChargeUIContainer, crosshair;
     public Image progressBar;
     public RectTransform mouseBox;
+    public GameObject itemUIWindows;
+    public TextMeshProUGUI interactTextWindows;
+    public GameObject itemUIMobile, mobileUI;
+    public TextMeshProUGUI interactTextMobile;
 
     private GameObject itemUI;
     private TextMeshProUGUI interactText;
+    private GameObject player;
+    private Inputs input;
+    private bool debugScreenOn = false;
+    private int frameRateCap;
 
     public GameObject ItemUI
     {
@@ -35,16 +42,6 @@ public class UIManager : MonoBehaviour
             return interactText;
         }
     }
-
-
-    public GameObject itemUIWindows;
-    public TextMeshProUGUI interactTextWindows;
-    public GameObject itemUIMobile, mobileUI;
-    public TextMeshProUGUI interactTextMobile;
-
-    private GameObject player;
-
-    private Inputs input;
 
     void Awake()
     {
@@ -65,8 +62,6 @@ public class UIManager : MonoBehaviour
         input = new Inputs();
         input.Enable();
     }
-
-    private bool debugScreenOn = false;
 
     /// <summary>
     /// 현재 플레이어가 사용하는 입력에 따라 상호작용 텍스트를 반환합니다.
@@ -120,7 +115,13 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.GetComponent<PlayerController>().input.currentControlScheme == "Mobile")
+#if UNITY_ANDROID
+        player.GetComponent<PlayerController>().input.neverAutoSwitchControlSchemes = true;
+        player.GetComponent<PlayerController>().input.defaultControlScheme = "Mobile";
+        player.GetComponent<PlayerController>().input.SwitchCurrentControlScheme("Mobile");
+#endif
+
+        if (player.GetComponent<PlayerController>().input.currentControlScheme == "Mobile" || player.GetComponent<PlayerController>().input.actions["isTouched"].IsPressed() || Application.isMobilePlatform)
         {
             itemUI = itemUIMobile;
             interactText = interactTextMobile;
@@ -150,6 +151,11 @@ public class UIManager : MonoBehaviour
             ShowOrHideDebugScreen();
         }
 
+        if (input.System.Escape.WasPressedThisFrame())
+        {
+            Exit();
+        }
+
         if (debugScreenOn)
         {
             frameRateCap = Application.targetFrameRate;
@@ -157,17 +163,13 @@ public class UIManager : MonoBehaviour
             if (frameRateCap == -1)
             {
                 debugInfoText.text = string.Format("FPS: {0:0}\nDisplay: {1}x{2}", 1 / Time.smoothDeltaTime, Screen.width, Screen.height);
-
             }
             else
             {
                 debugInfoText.text = string.Format("FPS: {0:0} / {1}\nDisplay: {2}x{3}", 1 / Time.smoothDeltaTime, frameRateCap, Screen.width, Screen.height);
             }
-
         }
     }
-
-    private int frameRateCap;
 
     public void DisableInputSystem()
     {
@@ -208,7 +210,6 @@ public class UIManager : MonoBehaviour
         CloseTooltip();
         if (!inventoryUI.activeSelf)
         {
-
             inventoryUI.SetActive(true);
 
             Cursor.lockState = CursorLockMode.None;
@@ -274,14 +275,12 @@ public class UIManager : MonoBehaviour
     public void ShowWarning(string text)
     {
         StopAllCoroutines();
-
         StartCoroutine(WarnTextCoroutine(text));
     }
 
     private IEnumerator WarnTextCoroutine(string text)
     {
         warningText.text = text;
-
         warningText.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(2f);
