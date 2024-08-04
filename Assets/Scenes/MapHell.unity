@@ -10071,7 +10071,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1501253570
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10111,10 +10111,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "F\uB97C \uB20C\uB7EC \uBB38 \uC5F4\uAE30"
+  m_text: "InteractionText\n\uC0C1\uD638\uC791\uC6A9\uBB38\uC790\uC5F4"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 09c439eccccab9043b1d410b409edce5, type: 2}
-  m_sharedMaterial: {fileID: 3374186264950284207, guid: 09c439eccccab9043b1d410b409edce5, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 44e12767d927116489ac889fe5bb18fc, type: 2}
+  m_sharedMaterial: {fileID: -1574397787437800155, guid: 44e12767d927116489ac889fe5bb18fc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10160,7 +10160,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
