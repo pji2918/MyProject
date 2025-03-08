@@ -1,5 +1,141 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5996071343239400065
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 109baf2d045f7334ba5e9f43cd290303, type: 3}
+  m_Name: HeightFogPPPPSSettings
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  _Banner:
+    overrideState: 1
+    value: 0
+  _FogCat:
+    overrideState: 1
+    value: 1
+  _FogIntensity:
+    overrideState: 1
+    value: 1
+  _FogAxisMode:
+    overrideState: 1
+    value: 1
+  _FogLayersMode:
+    overrideState: 1
+    value: 0
+  _FogColorStart:
+    overrideState: 1
+    value: {r: 0.4411765, g: 0.722515, b: 1, a: 0}
+  _FogColorEnd:
+    overrideState: 1
+    value: {r: 0.4411765, g: 0.722515, b: 1, a: 0}
+  _FogColorDuo:
+    overrideState: 1
+    value: 1
+  _FogDistanceStart:
+    overrideState: 1
+    value: 0
+  _FogDistanceEnd:
+    overrideState: 1
+    value: 100
+  _FogDistanceFalloff:
+    overrideState: 1
+    value: 2
+  _FogHeightStart:
+    overrideState: 1
+    value: 0
+  _FogHeightEnd:
+    overrideState: 1
+    value: 100
+  _FogHeightFalloff:
+    overrideState: 1
+    value: 2
+  _FarDistanceHeight:
+    overrideState: 1
+    value: 0
+  _FarDistanceOffset:
+    overrideState: 1
+    value: 0
+  _SkyboxCat:
+    overrideState: 1
+    value: 1
+  _SkyboxFogIntensity:
+    overrideState: 1
+    value: 0
+  _SkyboxFogHeight:
+    overrideState: 1
+    value: 1
+  _SkyboxFogFalloff:
+    overrideState: 1
+    value: 2
+  _SkyboxFogOffset:
+    overrideState: 1
+    value: 0
+  _SkyboxFogBottom:
+    overrideState: 1
+    value: 0
+  _SkyboxFogFill:
+    overrideState: 1
+    value: 0
+  _DirectionalCat:
+    overrideState: 1
+    value: 1
+  _DirectionalColor:
+    overrideState: 1
+    value: {r: 1, g: 0.8280286, b: 0.6084906, a: 0}
+  _DirectionalIntensity:
+    overrideState: 1
+    value: 1
+  _DirectionalFalloff:
+    overrideState: 1
+    value: 2
+  _DirectionalDir:
+    overrideState: 1
+    value: {x: 1, y: 1, z: 1, w: 0}
+  _NoiseCat:
+    overrideState: 1
+    value: 1
+  _NoiseIntensity:
+    overrideState: 1
+    value: 1
+  _NoiseMin:
+    overrideState: 1
+    value: 0
+  _NoiseMax:
+    overrideState: 1
+    value: 1
+  _NoiseScale:
+    overrideState: 1
+    value: 30
+  _NoiseSpeed:
+    overrideState: 1
+    value: {x: 0.5, y: 0.5, z: 0, w: 0}
+  _NoiseDistanceEnd:
+    overrideState: 1
+    value: 200
+  _AdvancedCat:
+    overrideState: 1
+    value: 1
+  _JitterIntensity:
+    overrideState: 1
+    value: 0
+  _FogAxisOption:
+    overrideState: 1
+    value: {x: 0, y: 0, z: 0, w: 0}
+  _HeightFogStandalone:
+    overrideState: 1
+    value: 1
+  _IsHeightFogShader:
+    overrideState: 1
+    value: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20,6 +156,7 @@ MonoBehaviour:
   - {fileID: 114232185289346146}
   - {fileID: 114288678441462590}
   - {fileID: 114964227162046496}
+  - {fileID: -5996071343239400065}
 --- !u!114 &114059884413532516
 MonoBehaviour:
   m_ObjectHideFlags: 3
