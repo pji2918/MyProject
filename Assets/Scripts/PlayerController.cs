@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerCamera = GetComponentInChildren<Camera>();
 
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
 
         input = GetComponent<PlayerInput>();
@@ -417,7 +417,7 @@ public class PlayerController : MonoBehaviour
 
         if (holdingItem is Gun)
         {
-            if (input.currentControlScheme != "Mobile")
+            if (UIManager.instance.currentDevice != UIManager.Device.Touch)
             {
                 UIManager.instance.gunUsage.gameObject.SetActive(true);
             }
@@ -446,7 +446,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
-                if (input.actions["Fire"].WasPressedThisFrame())
+                if (input.actions["Attack"].WasPressedThisFrame())
                 {
                     if ((holdingItem as Gun).Ammo > 0)
                     {
@@ -616,43 +616,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public Material skyboxDark;
     private void LookAround()
     {
         if (controllable)
         {
-            if (input.currentControlScheme == "Mobile")
+            if (UIManager.instance.currentDevice == UIManager.Device.Touch)
             {
-                // if (input.actions["TouchPos"].ReadValue<Vector2>().x <= Display.main.systemWidth / 2)
-                // {
-                //     return;
-                // }
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = InputSystem.actions["Point"].ReadValue<Vector2>() }, results);
 
-                if (input.actions["isTouched"].IsPressed())
+                if (results.Count > 0)
                 {
-                    List<RaycastResult> results = new List<RaycastResult>();
-
-                    EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = input.actions["TouchPos"].ReadValue<Vector2>() }, results);
-
-                    if (results.Count > 0)
+                    foreach (var i in results)
                     {
-                        foreach (var i in results)
+                        if (i.gameObject.CompareTag("MobileUI"))
                         {
-                            if (i.gameObject.CompareTag("MobileUI"))
-                            {
-                                return;
-                            }
+                            return;
                         }
                     }
                 }
-
             }
 
-            // float mouseX = Input.GetAxisRaw("Mouse X") * (mouseSensitivity * 100) * Time.deltaTime;
-            // float mouseY = Input.GetAxisRaw("Mouse Y") * (mouseSensitivity * 100) * Time.deltaTime;
-
-            float mouseX = input.actions["Mouse"].ReadValue<Vector2>().x * (mouseSensitivity * 50) * Time.deltaTime;
-            float mouseY = input.actions["Mouse"].ReadValue<Vector2>().y * (mouseSensitivity * 50) * Time.deltaTime;
+            float mouseX = input.actions["Look"].ReadValue<Vector2>().x * (mouseSensitivity * 50) * Time.deltaTime;
+            float mouseY = input.actions["Look"].ReadValue<Vector2>().y * (mouseSensitivity * 50) * Time.deltaTime;
 
             yRotation += mouseX;
             xRotation -= mouseY;
@@ -664,7 +650,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    [SerializeField] GameObject dlight, gvolume, gvolumeDark;
+    [SerializeField] GameObject dlight, gvolume;
 
     [SerializeField] private Goods goods;
     private float sleepTimer = 0f;
@@ -673,7 +659,7 @@ public class PlayerController : MonoBehaviour
     {
         if (controllable)
         {
-            Vector2 moveAxis = input.actions["PlayerMove"].ReadValue<Vector2>();
+            Vector2 moveAxis = input.actions["Move"].ReadValue<Vector2>();
 
             Vector3 move = ((moveAxis.x * transform.right) + (moveAxis.y * transform.forward)) * moveSpeed;
 
@@ -685,8 +671,6 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        UIManager.instance.DisableInputSystem();
-
         UIManager.instance.youDiedScreen.SetActive(true);
         UIManager.instance.scoreText.text = score.ToString();
         controllable = false;

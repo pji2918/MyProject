@@ -1,11 +1,11 @@
+using System.Linq;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
-using System.Linq;
-using pji2918.Input;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,7 +23,6 @@ public class UIManager : MonoBehaviour
     private GameObject itemUI;
     private TextMeshProUGUI interactText;
     private GameObject player;
-    private Inputs input;
     private bool debugScreenOn = false;
     private int frameRateCap;
 
@@ -58,8 +57,41 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        input = new Inputs();
-        input.Enable();
+    }
+
+    void OnEnable()
+    {
+        InputSystem.onDeviceChange += OnDeviceChange;
+    }
+
+    void OnDisable()
+    {
+        InputSystem.onDeviceChange -= OnDeviceChange;
+    }
+
+    public enum Device
+    {
+        KeyboardAndMouse,
+        Touch,
+        Gamepad
+    }
+
+    public Device currentDevice;
+
+    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    {
+        if (device is Keyboard || device is Mouse)
+        {
+            currentDevice = Device.KeyboardAndMouse;
+        }
+        else if (device is Touchscreen)
+        {
+            currentDevice = Device.Touch;
+        }
+        else
+        {
+
+        }
     }
 
     /// <summary>
@@ -71,9 +103,9 @@ public class UIManager : MonoBehaviour
     /// <exception cref="ArgumentNullException">Windows 환경에서 눌러야 하는 키를 제공하지 않을 경우 발생합니다.</exception>
     public string GetInteractText(string key = null, bool longPress = false)
     {
-        switch (player.GetComponent<PlayerController>().input.currentControlScheme)
+        switch (currentDevice)
         {
-            case "PC":
+            case Device.KeyboardAndMouse:
                 {
                     if (key == null)
                     {
@@ -88,7 +120,7 @@ public class UIManager : MonoBehaviour
                         return string.Format("{0}을 눌러", key);
                     }
                 }
-            case "Mobile":
+            case Device.Touch:
                 {
                     return "상호작용하여";
                 }
@@ -114,20 +146,15 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-#if UNITY_ANDROID
-        player.GetComponent<PlayerController>().input.neverAutoSwitchControlSchemes = true;
-        player.GetComponent<PlayerController>().input.defaultControlScheme = "Mobile";
-        player.GetComponent<PlayerController>().input.SwitchCurrentControlScheme("Mobile");
-#endif
-
-        if (player.GetComponent<PlayerController>().input.currentControlScheme == "Mobile" || player.GetComponent<PlayerController>().input.actions["isTouched"].IsPressed() || Application.isMobilePlatform)
+        // if (player.GetComponent<PlayerController>().input.currentControlScheme == "Touch" || Application.isMobilePlatform)
+        if (currentDevice == Device.Touch)
         {
             itemUI = itemUIMobile;
             interactText = interactTextMobile;
 
             mobileUI.SetActive(true);
         }
-        else if (player.GetComponent<PlayerController>().input.currentControlScheme == "PC")
+        else
         {
             itemUI = itemUIWindows;
             interactText = interactTextWindows;
@@ -137,20 +164,20 @@ public class UIManager : MonoBehaviour
 
         if (inventoryUI.activeSelf)
         {
-            mouseBox.position = input.System.MousePos.ReadValue<Vector2>();
+            mouseBox.position = InputSystem.actions["Point"].ReadValue<Vector2>();
         }
 
-        if (input.System.Screenshot.WasPressedThisFrame())
+        if (InputSystem.actions["Screenshot"].WasPressedThisFrame())
         {
             TakeScreenshot();
         }
 
-        if (input.System.Debug.WasPressedThisFrame())
+        if (InputSystem.actions["Debug"].WasPressedThisFrame())
         {
             ShowOrHideDebugScreen();
         }
 
-        if (input.System.Escape.WasPressedThisFrame())
+        if (InputSystem.actions["Cancel"].WasPressedThisFrame())
         {
             Exit();
         }
@@ -168,12 +195,6 @@ public class UIManager : MonoBehaviour
                 debugInfoText.text = string.Format("FPS: {0:0} / {1}\nDisplay: {2}x{3}", 1 / Time.smoothDeltaTime, frameRateCap, Screen.width, Screen.height);
             }
         }
-    }
-
-    public void DisableInputSystem()
-    {
-        input.Disable();
-        input.Dispose();
     }
 
     public void RefreshInventory()
@@ -220,7 +241,7 @@ public class UIManager : MonoBehaviour
         {
             inventoryUI.SetActive(false);
 
-            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = false;
 
             FindFirstObjectByType<PlayerController>().controllable = true;

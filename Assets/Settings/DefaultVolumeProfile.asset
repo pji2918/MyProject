@@ -432,7 +432,6 @@ MonoBehaviour:
   - {fileID: 6495249437275030450}
   - {fileID: -6585810803494768275}
   - {fileID: 6788337423678164736}
-  - {fileID: -4847201152114208324}
 --- !u!114 &623746855366919428
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -847,3 +846,6 @@ MonoBehaviour:
   skyOcclusionIntensityMultiplier:
     m_OverrideState: 1
     m_Value: 1
+  worldOffset:
+    m_OverrideState: 1
+    m_Value: {x: 0, y: 0, z: 0}

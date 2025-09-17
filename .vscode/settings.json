@@ -55,7 +55,8 @@
         "UserSettings/": true,
         "temp/": true,
         "Temp/": true,
-        "**/*.shadergraph": true
+        "**/*.shadergraph": true,
+        "Assets/BOXOPHOBIC/": true
     },
     "dotnet.defaultSolution": "MyProject.sln"
 }
