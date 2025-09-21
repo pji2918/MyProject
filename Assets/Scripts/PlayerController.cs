@@ -620,10 +620,8 @@ public class PlayerController : MonoBehaviour
     {
         if (controllable)
         {
-            if (UIManager.instance.currentDevice == UIManager.Device.Touch)
-            {
-                List<RaycastResult> results = new List<RaycastResult>();
-                EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = InputSystem.actions["Point"].ReadValue<Vector2>() }, results);
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = InputSystem.actions["Point"].ReadValue<Vector2>() }, results);
 
             if (results.Count > 0)
             {

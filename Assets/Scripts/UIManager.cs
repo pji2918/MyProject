@@ -112,31 +112,24 @@ public class UIManager : MonoBehaviour
     /// <exception cref="ArgumentNullException">Windows 환경에서 눌러야 하는 키를 제공하지 않을 경우 발생합니다.</exception>
     public string GetInteractText(string key = null, bool longPress = false)
     {
-        switch (currentDevice)
+        if (IsTouchDevice())
         {
-            case Device.KeyboardAndMouse:
-                {
-                    if (key == null)
-                    {
-                        throw new System.ArgumentNullException(key, "Windows 환경에서는 눌러야 하는 키를 제공해야 합니다.");
-                    }
-                    else if (longPress)
-                    {
-                        return string.Format("{0}을 길게 눌러", key);
-                    }
-                    else
-                    {
-                        return string.Format("{0}을 눌러", key);
-                    }
-                }
-            case Device.Touch:
-                {
-                    return "상호작용하여";
-                }
-            default:
-                {
-                    return key;
-                }
+            if (key == null)
+            {
+                throw new System.ArgumentNullException(key, "Windows 환경에서는 눌러야 하는 키를 제공해야 합니다.");
+            }
+            else if (longPress)
+            {
+                return string.Format("{0}을 길게 눌러", key);
+            }
+            else
+            {
+                return string.Format("{0}을 눌러", key);
+            }
+        }
+        else
+        {
+            return "상호작용하여";
         }
     }
 
