@@ -625,14 +625,13 @@ public class PlayerController : MonoBehaviour
                 List<RaycastResult> results = new List<RaycastResult>();
                 EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = InputSystem.actions["Point"].ReadValue<Vector2>() }, results);
 
-                if (results.Count > 0)
+            if (results.Count > 0)
+            {
+                foreach (var i in results)
                 {
-                    foreach (var i in results)
+                    if (i.gameObject.CompareTag("MobileUI"))
                     {
-                        if (i.gameObject.CompareTag("MobileUI"))
-                        {
-                            return;
-                        }
+                        return;
                     }
                 }
             }
