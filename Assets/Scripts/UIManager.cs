@@ -57,11 +57,15 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        // 시작 시에도 현재 사용 가능한 입력을 강제로 판별 (InputSystem.onDeviceChange가 시작 시 호출되지 않는 플랫폼 대비)
+        DetectCurrentDevice();
     }
 
     void OnEnable()
     {
         InputSystem.onDeviceChange += OnDeviceChange;
+        // 장치 변경 콜백 외에 최초 감지를 강제 실행
+        DetectCurrentDevice();
     }
 
     void OnDisable()
@@ -88,9 +92,14 @@ public class UIManager : MonoBehaviour
         {
             currentDevice = Device.Touch;
         }
+        else if (device is Gamepad)
+        {
+            currentDevice = Device.Gamepad;
+        }
         else
         {
-
+            // 알 수 없는 디바이스 변경 시에도 한 번 판별 실행
+            DetectCurrentDevice();
         }
     }
 
@@ -146,8 +155,8 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (player.GetComponent<PlayerController>().input.currentControlScheme == "Touch" || Application.isMobilePlatform)
-        if (currentDevice == Device.Touch)
+        // 모바일 감지 로직을 중앙화된 판별 함수로 교체
+        if (IsTouchDevice())
         {
             itemUI = itemUIMobile;
             interactText = interactTextMobile;
@@ -306,5 +315,46 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         warningText.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 터치 입력 가능성을 포함해 현재 장치를 판별합니다.
+    /// </summary>
+    private void DetectCurrentDevice()
+    {
+        // Touchscreen.current 또는 InputSystem에 등록된 Touchscreen 장치가 있거나 모바일 플랫폼이면 터치로 판단
+        if (Touchscreen.current != null || InputSystem.devices.Any(d => d is Touchscreen) || Application.isMobilePlatform)
+        {
+            currentDevice = Device.Touch;
+            return;
+        }
+
+        // Gamepad가 연결된 경우
+        if (Gamepad.current != null || InputSystem.devices.Any(d => d is Gamepad))
+        {
+            currentDevice = Device.Gamepad;
+            return;
+        }
+
+        // 키보드/마우스가 확인되면 그쪽으로 설정, 아니면 기본값으로 설정
+        if (Keyboard.current != null || Mouse.current != null || InputSystem.devices.Any(d => d is Keyboard || d is Mouse))
+        {
+            currentDevice = Device.KeyboardAndMouse;
+            return;
+        }
+
+        // 최후 보류: 기본적으로 키보드/마우스
+        currentDevice = Device.KeyboardAndMouse;
+    }
+
+    /// <summary>
+    /// 현재 상태가 터치 기반 UI를 보여줘야 하는지 여부를 반환합니다.
+    /// </summary>
+    private bool IsTouchDevice()
+    {
+        return currentDevice == Device.Touch
+            || Touchscreen.current != null
+            || InputSystem.devices.Any(d => d is Touchscreen)
+            || Application.isMobilePlatform;
     }
 }
