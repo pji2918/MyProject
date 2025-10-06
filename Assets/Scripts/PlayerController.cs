@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
 
     [HideInInspector] public Rigidbody rb;
     private Camera playerCamera;
-    [SerializeField][Range(0f, 10f)] private float mouseSensitivity = 1f;
+    [SerializeField][Range(0.01f, 10f)] private float mouseSensitivity = 1f;
     [SerializeField] private float moveSpeed = 30f;
 
     [SerializeField] private float doorOpenTime = 3f, inventoryOpenTime = 1f;
@@ -72,6 +72,7 @@ public class PlayerController : MonoBehaviour
     {
         MovePlayer(); // 플레이어 이동 함수 호출
         LookAround();
+        ChangeSensitivity();
     }
 
     // 아주 복잡한 플레이어 이동 함수입니다.
@@ -84,7 +85,7 @@ public class PlayerController : MonoBehaviour
             UIManager.instance.progressBarContainer.SetActive(false);
         }
 
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        Ray ray = new(playerCamera.transform.position, playerCamera.transform.forward);
 
         if (!UIManager.instance.inventoryUI.activeSelf)
         {
@@ -620,7 +621,7 @@ public class PlayerController : MonoBehaviour
     {
         if (controllable)
         {
-            List<RaycastResult> results = new List<RaycastResult>();
+            List<RaycastResult> results = new();
             EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current) { position = InputSystem.actions["Point"].ReadValue<Vector2>() }, results);
 
             if (results.Count > 0)
@@ -645,6 +646,11 @@ public class PlayerController : MonoBehaviour
             playerCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
             transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
         }
+    }
+
+    private void ChangeSensitivity()
+    {
+        mouseSensitivity = UIManager.instance.sensitivitySlider.value;
     }
 
     [SerializeField] GameObject dlight, gvolume;

@@ -9,16 +9,18 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    private static readonly WaitForSeconds _waitForSeconds2 = new(2f);
     public static UIManager instance;
 
     public TextMeshProUGUI itemName, itemDescription, scoreText, gunUsage, warningText, itemNameText, gunChargeText, debugInfoText;
-    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, gunChargeUIContainer, crosshair;
+    public GameObject detectedWarning, youDiedScreen, progressBarContainer, inventoryUI, tooltipUI, gunChargeUIContainer, crosshair, pauseMenu;
     public Image progressBar;
     public RectTransform mouseBox;
     public GameObject itemUIWindows;
     public TextMeshProUGUI interactTextWindows;
     public GameObject itemUIMobile, mobileUI;
     public TextMeshProUGUI interactTextMobile;
+    public Slider sensitivitySlider;
 
     private GameObject itemUI;
     private TextMeshProUGUI interactText;
@@ -181,7 +183,7 @@ public class UIManager : MonoBehaviour
 
         if (InputSystem.actions["Cancel"].WasPressedThisFrame())
         {
-            Exit();
+            SetPause(true);
         }
 
         if (debugScreenOn)
@@ -264,6 +266,12 @@ public class UIManager : MonoBehaviour
 #endif
     }
 
+    public void SetPause(bool pause)
+    {
+        player.GetComponent<PlayerController>().controllable = !pause;
+        pauseMenu.SetActive(pause);
+    }
+
     public void CallTooltip(Item item)
     {
         itemName.text = item.ItemName;
@@ -305,7 +313,7 @@ public class UIManager : MonoBehaviour
         warningText.text = text;
         warningText.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(2f);
+        yield return _waitForSeconds2;
 
         warningText.gameObject.SetActive(false);
     }

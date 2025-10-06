@@ -82,7 +82,7 @@ public class Enemy : MonoBehaviour
     {
         // Ray ray = new Ray(transform.position, transform.forward);
         // Ray를 발사하여 바닥을 감지합니다.
-        Ray groundRay = new Ray(floorDetectionRayDirection.position, floorDetectionRayDirection.forward);
+        Ray groundRay = new(floorDetectionRayDirection.position, floorDetectionRayDirection.forward);
         Debug.DrawRay(groundRay.origin, groundRay.direction * 1.5f, Color.blue, 0.1f);
 
         Vector3 pos = transform.position + Vector3.up * 0.5f;
@@ -300,7 +300,7 @@ public class Enemy : MonoBehaviour
     }
 
     // 적이 감지한 GameObject를 저장할 List입니다.
-    List<Collider> targetList = new List<Collider>();
+    List<Collider> targetList = new();
 
     // 적이 플레이어와 닿았을 경우 플레이어를 죽입니다.
     void OnCollisionEnter(Collision other)
